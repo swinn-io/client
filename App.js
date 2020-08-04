@@ -1,60 +1,76 @@
-import {StatusBar} from 'expo-status-bar';
-import React from 'react';
-import * as WebBrowser from 'expo-web-browser';
-import {makeRedirectUri, useAuthRequest} from 'expo-auth-session';
-import {Button, StyleSheet, Text, View} from 'react-native';
+import * as React from 'react';
+import { Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
+import { Icon } from 'native-base';
 
-WebBrowser.maybeCompleteAuthSession();
+//Screen Imports
+import HomeScreen from './screens/HomeScreen';
+import AuthScreen from './screens/AuthScreen';
 
-// Endpoint
-const discovery = {
-    authorizationEndpoint: 'http://192.168.1.103/login',
-    tokenEndpoint: 'http://192.168.1.103/oauth/token',
-    revocationEndpoint: 'http://192.168.1.103/oauth/revoke',
-};
 
-export default function App() {
-    const [request, response, promptAsync] = useAuthRequest(
-        {
-            clientId: '',
-            scopes: [],
-            redirectUri: makeRedirectUri({
-                native: 'exp://redirect',
-                useProxy: false
-            }),
-        },
-        discovery
-    );
+import { AuthContext } from './services/context';
+import deviceStorage from './services/deviceStorage';
 
-    React.useEffect(() => {
-        if(response !== null) {
-            if (response?.type === 'success') {
-                const {code} = response.params;
-            }
-        }
-    }, [response]);
 
+const Stack = createStackNavigator();
+const MyStack = () => {
     return (
-        <View style={styles.container}>
-            <Text>Ping Pong Application</Text>
-            <Button
-                disabled={!request}
-                title="Login"
-                onPress={() => {
-                    promptAsync().then((r) => console.log(r));
-                }}
-            />
-            {response && <Text>Hello {response.params.callback.name}!</Text>}
-            <StatusBar style="auto"/>
-        </View>
+      <Stack.Navigator>
+        <Stack.Screen name="Auth" component={AuthScreen} />
+      </Stack.Navigator>
     );
+  }
+
+const Tab = createBottomTabNavigator();
+const BottomTabs = () => {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+            tabBarIcon: ({tintColor}) =>  <Icon name="ios-home" size={24} color={tintColor}/>
+        }}
+        />
+    </Tab.Navigator>
+  );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});
+export default App = () => {
+
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [userToken, setUserToken] = React.useState(null);
+
+    const dummyToken = "a1b2c3d4"
+    const authContext = React.useMemo(() => ({
+        signIn: () => {
+            setUserToken(dummyToken)
+            //deviceStorage.saveToken("access_token", dummyToken);
+        },
+        signOut: () => {
+            setUserToken(null);
+        },
+    }));
+
+    if ( userToken ) {
+        return (
+            <AuthContext.Provider value={authContext}>
+                <NavigationContainer>
+                    <BottomTabs />
+                </NavigationContainer>
+            </AuthContext.Provider>
+        ); 
+    }
+
+    return (
+        // <NavigationContainer>
+        //     <MyStack />
+        // </NavigationContainer>
+        <AuthContext.Provider value={authContext}>
+            <AuthScreen></AuthScreen>
+        </AuthContext.Provider>
+    );
+    
+}
