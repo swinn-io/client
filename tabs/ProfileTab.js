@@ -4,15 +4,13 @@ import {StyleSheet} from "react-native";
 export default function ProfileTab() {
     return (
         <Content>
-            <Thumbnail style={styles.logo} source={{ uri: 'https://via.placeholder.com/200x200' }}/>
+            <Thumbnail style={styles.logo} square source={{ uri: 'https://via.placeholder.com/200x200' }}/>
             <Text style={styles.logoText}>John Doe</Text>
-            <Separator bordered>
-                <Text>Customize</Text>
-            </Separator>
+            <Separator bordered />
             <ListItem icon>
                 <Left>
                     <Button style={{ backgroundColor: "#FF9501" }}>
-                        <Icon active name="plug" type='FontAwesome5' />
+                        <Icon active name="access-point" type="MaterialCommunityIcons" />
                     </Button>
                 </Left>
                 <Body>
@@ -25,7 +23,7 @@ export default function ProfileTab() {
             <ListItem icon>
                 <Left>
                     <Button style={{ backgroundColor: "#007AFF" }}>
-                        <Icon active name="database" type='FontAwesome5' />
+                        <Icon active name="database" type='MaterialCommunityIcons' />
                     </Button>
                 </Left>
                 <Body>
@@ -39,7 +37,7 @@ export default function ProfileTab() {
             <ListItem icon>
                 <Left>
                     <Button style={{ backgroundColor: "#007AFF" }}>
-                        <Icon active name="life-ring" type='FontAwesome5' />
+                        <Icon active name="lifebuoy" type='MaterialCommunityIcons' />
                     </Button>
                 </Left>
                 <Body>
@@ -49,6 +47,64 @@ export default function ProfileTab() {
                     <Text>5 People</Text>
                     <Icon active name="arrow-forward" />
                 </Right>
+            </ListItem>
+            <Separator bordered />
+            <ListItem icon>
+                <Left>
+                    <Button style={{ backgroundColor: "#000000" }}>
+                        <Icon active name="weather-night" type='MaterialCommunityIcons' />
+                    </Button>
+                </Left>
+                <Body>
+                    <Text>Dark Mode</Text>
+                </Body>
+                <Right>
+                    <Switch value={false} />
+                </Right>
+            </ListItem>
+            <ListItem icon>
+                <Left>
+                    <Button style={{ backgroundColor: "#007AFF" }}>
+                        <Icon active name="information-outline" type='MaterialCommunityIcons' />
+                    </Button>
+                </Left>
+                <Body>
+                    <Text>About Ping Pong</Text>
+                </Body>
+                <Right />
+            </ListItem>
+            <ListItem icon>
+                <Left>
+                    <Button style={{ backgroundColor: "#007AFF" }}>
+                        <Icon active name="share-variant" type='MaterialCommunityIcons' />
+                    </Button>
+                </Left>
+                <Body>
+                    <Text>Share Ping Pong</Text>
+                </Body>
+                <Right />
+            </ListItem>
+            <ListItem icon>
+                <Left>
+                    <Button style={{ backgroundColor: "#007AFF" }}>
+                        <Icon active name="star" type='MaterialCommunityIcons' />
+                    </Button>
+                </Left>
+                <Body>
+                    <Text>Rate Us</Text>
+                </Body>
+                <Right />
+            </ListItem>
+            <ListItem icon>
+                <Left>
+                    <Button style={{ backgroundColor: "red" }}>
+                        <Icon active name="delete" type='MaterialCommunityIcons' />
+                    </Button>
+                </Left>
+                <Body>
+                    <Text>Delete my account</Text>
+                </Body>
+                <Right />
             </ListItem>
         </Content>
     );
