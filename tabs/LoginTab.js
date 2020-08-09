@@ -2,17 +2,19 @@ import React from 'react';
 import * as WebBrowser from 'expo-web-browser';
 import {makeRedirectUri, useAuthRequest} from 'expo-auth-session';
 import {Button, StyleSheet, Text, View} from 'react-native';
+import constants from '../services/constants';
 
 WebBrowser.maybeCompleteAuthSession();
 
 // Endpoint
 const discovery = {
-    authorizationEndpoint: 'http://192.168.1.103/login',
-    tokenEndpoint: 'http://192.168.1.103/oauth/token',
-    revocationEndpoint: 'http://192.168.1.103/oauth/revoke',
+    authorizationEndpoint: constants.authorizationEndpoint,
+    tokenEndpoint: constants.tokenEndpoint,
+    revocationEndpoint: constants.revocationEndpoint,
 };
 
-export default function LoginTab() {
+export default function LoginTab( props ) {
+
     const [request, response, promptAsync] = useAuthRequest(
         {
             clientId: '',
@@ -40,7 +42,8 @@ export default function LoginTab() {
                 disabled={!request}
                 title="Login"
                 onPress={() => {
-                    promptAsync().then((r) => console.log(r));
+                    props.login('abc');
+                    //promptAsync().then((r) => console.log(r));
                 }}
             />
             {response && <Text>Hello {response.params.callback.name}!</Text>}

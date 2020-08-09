@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Content, Icon, ListItem, Left, Body, Right, Switch, Text, Thumbnail, Separator} from 'native-base';
 import {StyleSheet} from "react-native";
-export default function ProfileTab() {
+export default function ProfileTab( props ) {
     return (
         <Content>
             <Thumbnail style={styles.logo} square source={{ uri: 'https://via.placeholder.com/200x200' }}/>
@@ -84,14 +84,15 @@ export default function ProfileTab() {
                 </Body>
                 <Right />
             </ListItem>
-            <ListItem icon>
+            <ListItem icon onPress={() => { props.logout(); }}>
                 <Left>
                     <Button style={{ backgroundColor: "#007AFF" }}>
-                        <Icon active name="star" type='MaterialCommunityIcons' />
+                        <Icon active name="logout" type='MaterialCommunityIcons' />
                     </Button>
+                    
                 </Left>
                 <Body>
-                    <Text>Rate Us</Text>
+                    <Text>Logout</Text>
                 </Body>
                 <Right />
             </ListItem>
