@@ -1,10 +1,10 @@
 import * as SecureStore from 'expo-secure-store';
 
-export const deviceStorage = {
+const deviceStorage = {
     
     async saveToken(key, value) {
         try {
-            SecureStore.setItemAsync(key, value);
+            await SecureStore.setItemAsync(key, value);
             console.log('SecureStorage Key Saved');
         } catch (error) {
             console.log('SecureStorage Save Error: ' + error.message);
@@ -19,7 +19,7 @@ export const deviceStorage = {
     },
     async removeToken(key) {
         try {
-            SecureStore.deleteItemAsync(key)
+            await SecureStore.deleteItemAsync(key)
             console.log('SecureStorage Key Deleted');
         } catch (error) {
             console.log('SecureStorage Delete Error: ' + error.message);
@@ -28,4 +28,4 @@ export const deviceStorage = {
 
 };
 
-//export default deviceStorage;
+export default deviceStorage;

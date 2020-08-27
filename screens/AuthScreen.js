@@ -14,9 +14,9 @@ WebBrowser.maybeCompleteAuthSession();
 
 // Endpoint
 const discovery = {
-    authorizationEndpoint: 'http://192.168.1.103/login',
-    tokenEndpoint: 'http://192.168.1.103/oauth/token',
-    revocationEndpoint: 'http://192.168.1.103/oauth/revoke',
+    authorizationEndpoint: 'http://192.168.1.107/login',
+    tokenEndpoint: 'http://192.168.1.107/oauth/token',
+    revocationEndpoint: 'http://192.168.1.107/oauth/revoke',
 };
 
 export default function AuthScreen() {
@@ -36,17 +36,39 @@ export default function AuthScreen() {
     const { signIn } = React.useContext(AuthContext);
 
     React.useEffect(() => {
-        if(response !== null) {
-            if (response?.type === 'success') {
-                const {code} = response.params;
+        try {
+            if(response !== null) {
+                if (response?.type === 'success') {
+                    const {code} = response.params;
+                }
+                else {
+                    console.log("Unsuccessful login");
+                }
             }
+            else {
+                console.log("Null response");
+            }
+        } catch (error) {
+            console.log("Response error:", error);
         }
     }, [response]);
 
 
     const handleLogin = async () => {
         //SignIn comes from App.js Context
-        signIn();
+        try {
+            promptAsync()
+            .then((r) => {
+                const User = {
+                    name: r.params.callback.name,
+                    token: r.params.callback.client.secret
+                }
+                signIn( User.token );
+            })
+            .catch((err) => console.log(err));
+        } catch (error) {
+            console.log("Handle Login Error", error);
+        }
     }
 
     return (
@@ -58,14 +80,6 @@ export default function AuthScreen() {
             >
                 <Text>Login</Text>
             </Button>
-            <Button
-                disabled={!request}
-                title="Login"
-                onPress={() => {
-                    promptAsync().then((r) => console.log(r));
-                }}
-            />
-            {response && <Text>Hello {response.params.callback.name}!</Text>}
             <StatusBar style="auto"/>
         </View>
     );

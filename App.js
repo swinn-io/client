@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -8,6 +8,7 @@ import { Icon } from 'native-base';
 //Screen Imports
 import HomeScreen from './screens/HomeScreen';
 import AuthScreen from './screens/AuthScreen';
+import LoadingScreen from './screens/LoadingScreen';
 
 
 import { AuthContext } from './services/context';
@@ -34,27 +35,67 @@ const BottomTabs = () => {
             tabBarIcon: ({tintColor}) =>  <Icon name="ios-home" size={24} color={tintColor}/>
         }}
         />
+        <Tab.Screen
+        name="Home2"
+        component={HomeScreen}
+        options={{
+            tabBarIcon: ({tintColor}) =>  <Icon name="ios-home" size={24} color={tintColor}/>
+        }}
+        />
     </Tab.Navigator>
   );
 }
 
 export default App = () => {
 
-    const [isLoading, setIsLoading] = React.useState(false);
-    const [userToken, setUserToken] = React.useState(null);
+    const [isLoading, setIsLoading] = React.useState(true);
+    const [userToken, setUserToken] = React.useState();
 
-    const dummyToken = "a1b2c3d4"
     const authContext = React.useMemo(() => ({
-        signIn: () => {
-            setUserToken(dummyToken)
-            //deviceStorage.saveToken("access_token", dummyToken);
+        signIn: ( token ) => {
+          try {
+            if(token){
+              deviceStorage.saveToken("access_token", token);
+              setUserToken(token);
+            }
+          } catch (error) {
+            console.log("SignIn Error", error);
+          }
         },
         signOut: () => {
+          try {
+            deviceStorage.removeToken("access_token");
             setUserToken(null);
+          } catch (error) {
+            console.log("SignOut Error", error);
+          }
         },
     }));
 
-    if ( userToken ) {
+    const handleAccessTokenState = async () => {
+      try {
+        const token = await deviceStorage.getToken("access_token");
+        if ( token ) {
+          setUserToken(token);
+        }
+        setIsLoading(false);
+      } catch (error) {
+        console.log("handleAccessTokenState", error);
+      }
+    }
+
+    useEffect(() => {
+      handleAccessTokenState();
+    }, []);
+
+
+    if ( isLoading ){
+      return (
+        <LoadingScreen></LoadingScreen>
+      );
+    }
+    else {
+      if ( userToken ) {
         return (
             <AuthContext.Provider value={authContext}>
                 <NavigationContainer>
@@ -62,15 +103,17 @@ export default App = () => {
                 </NavigationContainer>
             </AuthContext.Provider>
         ); 
+      }
+      else {
+        return (
+          <AuthContext.Provider value={authContext}>
+              <AuthScreen></AuthScreen>
+          </AuthContext.Provider>
+        );
+      }
     }
 
-    return (
-        // <NavigationContainer>
-        //     <MyStack />
-        // </NavigationContainer>
-        <AuthContext.Provider value={authContext}>
-            <AuthScreen></AuthScreen>
-        </AuthContext.Provider>
-    );
+
+    
     
 }
