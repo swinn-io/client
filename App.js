@@ -1,91 +1,66 @@
-import React, { useEffect, useCallback } from 'react';
-import { Text, View } from 'react-native';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
-import { Icon } from 'native-base';
 
 //Screen Imports
-import HomeScreen from './screens/HomeScreen';
-import AuthScreen from './screens/AuthScreen';
 import LoadingScreen from './screens/LoadingScreen';
 
-
+import { AuthStack, BottomTabs } from './stacks'
 import { AuthContext } from './services/context';
+
 import deviceStorage from './services/deviceStorage';
-
-
-const Stack = createStackNavigator();
-const MyStack = () => {
-    return (
-      <Stack.Navigator>
-        <Stack.Screen name="Auth" component={AuthScreen} />
-      </Stack.Navigator>
-    );
-  }
-
-const Tab = createBottomTabNavigator();
-const BottomTabs = () => {
-  return (
-    <Tab.Navigator>
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-            tabBarIcon: ({tintColor}) =>  <Icon name="ios-home" size={24} color={tintColor}/>
-        }}
-        />
-        <Tab.Screen
-        name="Home2"
-        component={HomeScreen}
-        options={{
-            tabBarIcon: ({tintColor}) =>  <Icon name="ios-home" size={24} color={tintColor}/>
-        }}
-        />
-    </Tab.Navigator>
-  );
-}
 
 export default App = () => {
 
     const [isLoading, setIsLoading] = React.useState(true);
-    const [userToken, setUserToken] = React.useState();
+    const [user, setUser] = React.useState({});
 
     const authContext = React.useMemo(() => ({
-        signIn: ( token ) => {
+        signIn: async ( user ) => {
           try {
-            if(token){
-              deviceStorage.saveToken("access_token", token);
-              setUserToken(token);
+            if( !isEmpty( user )){
+              await deviceStorage.saveUser(user);
+              setUser(user);
             }
           } catch (error) {
             console.log("SignIn Error", error);
           }
         },
-        signOut: () => {
+        signOut: async () => {
           try {
-            deviceStorage.removeToken("access_token");
-            setUserToken(null);
+            await deviceStorage.removeUser();
+            setUser({});
           } catch (error) {
             console.log("SignOut Error", error);
           }
         },
+        getUser: async () => {
+          try {
+            let user = await deviceStorage.getUser()
+            return user;
+          } catch (error) {
+            console.log("GetUser Error", error);
+          }
+        },
     }));
 
-    const handleAccessTokenState = async () => {
+    const isEmpty = (obj) => {
+      return Object.entries(obj).length === 0 && obj.constructor === Object;
+    }
+
+    const handleUser = async () => {
       try {
-        const token = await deviceStorage.getToken("access_token");
-        if ( token ) {
-          setUserToken(token);
+        const user = await deviceStorage.getUser();
+        if ( user ) {
+          setUser(user);
         }
         setIsLoading(false);
       } catch (error) {
-        console.log("handleAccessTokenState", error);
+        console.log("handleUser", error);
       }
     }
 
     useEffect(() => {
-      handleAccessTokenState();
+      handleUser();
     }, []);
 
 
@@ -95,19 +70,21 @@ export default App = () => {
       );
     }
     else {
-      if ( userToken ) {
+      if ( user.access_token ) {
         return (
-            <AuthContext.Provider value={authContext}>
-                <NavigationContainer>
-                    <BottomTabs />
-                </NavigationContainer>
-            </AuthContext.Provider>
+          <AuthContext.Provider value={authContext}>
+              <NavigationContainer>
+                  <BottomTabs />
+              </NavigationContainer>
+          </AuthContext.Provider>
         ); 
       }
       else {
         return (
           <AuthContext.Provider value={authContext}>
-              <AuthScreen></AuthScreen>
+            <NavigationContainer>
+              <AuthStack/>
+            </NavigationContainer>
           </AuthContext.Provider>
         );
       }

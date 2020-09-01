@@ -2,21 +2,17 @@ import {StatusBar} from 'expo-status-bar';
 import React, { Component } from 'react';
 import * as WebBrowser from 'expo-web-browser';
 import {makeRedirectUri, useAuthRequest} from 'expo-auth-session';
-import { StyleSheet, View} from 'react-native';
-import { Container, Header, Content, List, ListItem, Thumbnail, Text, Left, Body, Right, Button, Badge, Icon } from 'native-base';
-import deviceStorage from '../services/deviceStorage';
-
+import { Container, Header, Content, Button, Text } from 'native-base';
+import constants from '../constants/constants';
 
 import { AuthContext } from '../services/context';
 
 WebBrowser.maybeCompleteAuthSession();
 
-
-// Endpoint
 const discovery = {
-    authorizationEndpoint: 'http://192.168.1.107/login',
-    tokenEndpoint: 'http://192.168.1.107/oauth/token',
-    revocationEndpoint: 'http://192.168.1.107/oauth/revoke',
+    authorizationEndpoint: constants.authorizationEndpoint(),
+    tokenEndpoint: constants.tokenEndpoint(),
+    revocationEndpoint: constants.revocationEndpoint()
 };
 
 export default function AuthScreen() {
@@ -53,17 +49,57 @@ export default function AuthScreen() {
         }
     }, [response]);
 
+    const handleSignup = async () => {
 
-    const handleLogin = async () => {
-        //SignIn comes from App.js Context
         try {
             promptAsync()
-            .then((r) => {
-                const User = {
-                    name: r.params.callback.name,
-                    token: r.params.callback.client.secret
+            .then((res) => {
+                const grantType = "client_credentials";
+                const { id, secret, redirect } = res.params.callback.client;
+
+                return {
+                    grant_type: grantType,
+                    id,
+                    secret,
+                    redirect
                 }
-                signIn( User.token );
+            })
+            .then(async (data) => {
+                try {
+                    if (data.secret){
+                        let resp = await fetch(discovery.tokenEndpoint, {
+                            method: 'POST',
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                grant_type: data.grant_type,
+                                client_id: data.id,
+                                client_secret: data.secret,
+                                redirect_uri: data.redirect
+                            }),
+                        });
+
+                        resp = await resp.json();
+                        const { token_type, expires_in, access_token } = resp;
+                        const { grant_type, id, secret, redirect } = data
+                        const User = {
+                            grant_type,
+                            client_id: id,
+                            client_secret: secret,
+                            redirect_uri: redirect,
+                            token_type,
+                            expires_in,
+                            access_token,
+                        }
+                        //console.log( User );
+                        signIn( User );
+                    }
+                }
+                catch (e) {
+                    console.error(e);
+                }
             })
             .catch((err) => console.log(err));
         } catch (error) {
@@ -72,25 +108,17 @@ export default function AuthScreen() {
     }
 
     return (
-        <View style={styles.container}>
-            <Text>Ping Pong Application</Text>
-            <Button 
-                style={{alignSelf:'center'}}
-                onPress={handleLogin}
-            >
-                <Text>Login</Text>
-            </Button>
+        <Container>
+            <Content contentContainerStyle={{ justifyContent: 'center', flex: 1 }}>
+                <Button
+                    style={{alignSelf:'center'}}
+                    onPress={handleSignup}
+                >
+                    <Text>Login</Text>
+                </Button>
+            </Content>
             <StatusBar style="auto"/>
-        </View>
+        </Container>
     );
 
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});

@@ -1,26 +1,32 @@
 import * as SecureStore from 'expo-secure-store';
+import constants from '../constants/constants';
 
 const deviceStorage = {
     
-    async saveToken(key, value) {
+    async saveUser(user) {
         try {
-            await SecureStore.setItemAsync(key, value);
-            console.log('SecureStorage Key Saved');
+            let stringifiedUser = JSON.stringify(user);
+            await SecureStore.setItemAsync('user', stringifiedUser);
+            // console.log('User stringified: ', stringifiedUser);
+            console.log('SecureStrorage User Saved');
         } catch (error) {
-            console.log('SecureStorage Save Error: ' + error.message);
+            console.log('SecureStorage Save User Error: ' + error.message);
         }
     },
-    async getToken() {
+    async getUser() {
         try {
-            return await SecureStore.getItemAsync('access_token');
+            let obtainedUser = await SecureStore.getItemAsync('user');
+            let jsonUser = JSON.parse(obtainedUser);
+            // console.log('User converted to JSON :', jsonUser);
+            return jsonUser;
         } catch (error) {
             console.log('SecureStorage Get Error: ' + error.message);
         }
     },
-    async removeToken(key) {
+    async removeUser() {
         try {
-            await SecureStore.deleteItemAsync(key)
-            console.log('SecureStorage Key Deleted');
+            await SecureStore.deleteItemAsync('user')
+            console.log('SecureStorage User Deleted');
         } catch (error) {
             console.log('SecureStorage Delete Error: ' + error.message);
         }
