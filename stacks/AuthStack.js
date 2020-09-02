@@ -8,7 +8,7 @@ const AuthStack = () => {
     return (
       <AStack.Navigator
         screenOptions={{
-            headerShown: "false"
+            headerShown: false
         }}
       >
         <AStack.Screen name="Auth" component={AuthScreen} />

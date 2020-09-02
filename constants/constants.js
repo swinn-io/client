@@ -1,7 +1,7 @@
 module.exports = {
 
     //Root
-    root: 'http://192.168.1.31',
+    root: 'http://192.168.1.38',
 
     //Secret
     secret: 'secret',
@@ -11,7 +11,8 @@ module.exports = {
     tokenEndpoint(){return this.root + '/oauth/token'},
     revocationEndpoint(){return this.root + '/oauth/revoke'},
 
-
     //Message
-    getMessage(){return this.root + '/api/message'},
+    getAllMessages(){return this.root + '/api/message'},
+    getSingleMessage(id){return this.root + `/api/message/${id}`},
+    
 }

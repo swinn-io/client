@@ -9,7 +9,7 @@ const MessageStack = () => {
     return (
       <MsgStack.Navigator
         screenOptions={{
-          headerShown: "false"
+          headerShown: false
         }}
       >
         <MsgStack.Screen name="Home" component={HomeScreen} />

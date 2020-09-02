@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Container, Content, Button, Text, List, ListItem }  from 'native-base';
+import React, { useState, useEffect } from 'react';
+import { Container, Content, Button, Text, List, ListItem, Left, Right, Icon, Thumbnail, Body, Spinner }  from 'native-base';
 import { AuthContext } from '../services/context';
 import { CustomHeader } from '../components/common'
 
@@ -8,43 +8,54 @@ import fetchJson from '../services/fetchJson';
 
 export default function HomeScreen (props) {
 
-    const { getUser } = React.useContext(AuthContext);
-
     const [messages, setMessages] = useState([]);
 
+    useEffect(() => {
+        getMessages()
+    }, [])
 
     const renderRow = (message) => {
+
+        console.log("MESSAGE-----------", message);
+
         return (
-            <ListItem
+            <ListItem thumbnail
                 onPress={() => {
-                    console.log("ID", message.id)
                     props.navigation.navigate("Message", {
-                        messageId: message.id
+                        messageId: message.id,
+                        messageTitle: message.subject
                     });
                 }}
             >
-                <Text>{message.subject}</Text>
+                <Left>
+                    <Thumbnail source={{ uri: 'https://www.pngitem.com/pimgs/m/581-5813504_avatar-dummy-png-transparent-png.png' }} />
+                </Left>
+                <Body>
+                    <Text>{message.subject}</Text>
+                    <Text note numberOfLines={1}>Chat text</Text>
+                </Body>
+                <Right>
+                    <Button transparent>
+                        <Icon numberOfLines={1} name="arrow-forward" />
+                    </Button>
+                </Right>
             </ListItem>
         );
       }
 
     const getMessages = async () => {
         try {
-            let user = await getUser();
+            let messages = await fetchJson.GET(constants.getAllMessages());
 
-            if (user) {
-                let messages = await fetchJson.GET(user, constants.getMessage());
-
-                let msg = [];
-                let threads = messages.data;
-                threads.forEach ((thread) => {
-                    msg.push({
-                        id: thread.id,
-                        subject: thread.attributes.subject
-                    });
-                })
-                setMessages(msg);
-            }
+            let msg = [];
+            let threads = messages.data;
+            threads.forEach ((thread) => {
+                msg.push({
+                    id: thread.id,
+                    subject: thread.attributes.subject
+                });
+            })
+            setMessages(msg);
         } catch (error) {
             console.log("HomeScreen GetMessages Error", error);
         }
@@ -57,11 +68,10 @@ export default function HomeScreen (props) {
                 <List
                     dataArray={messages}
                     keyExtractor={message => message.id}
-                    // renderRow={renderRow.bind()}>
                     renderRow={(message)=>renderRow(message)}>
                 </List>
             </Container>
-        );  
+        );
     }
     else {
         return (
@@ -73,13 +83,8 @@ export default function HomeScreen (props) {
                     alignItems: 'center',
                     justifyContent: 'center'
                     }}>
-                        <Text>You don't have any messages yet!</Text>
-                        <Button
-                            style={{alignSelf:'center'}}
-                            onPress={getMessages}
-                        >
-                            <Text>Get Messages</Text>
-                        </Button>
+                        {/* <Text>You don't have any messages yet!</Text> */}
+                        <Spinner/>
                 </Content>
             </Container>
         );  

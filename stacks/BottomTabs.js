@@ -10,7 +10,7 @@ const BottomTabs = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        headerShown: "false"
+        headerShown: false
       }}
     >
       <Tab.Screen
@@ -19,14 +19,14 @@ const BottomTabs = () => {
         options={{
             tabBarIcon: ({tintColor}) =>  <Icon name="ios-home" size={24} color={tintColor}/>
         }}
-        />
-        <Tab.Screen
+      />
+      <Tab.Screen
         name="Profile"
         component={ProfileScreen}
         options={{
             tabBarIcon: ({tintColor}) =>  <Icon name="ios-person" size={24} color={tintColor}/>
         }}
-        />
+      />
     </Tab.Navigator>
   );
 }
