@@ -3,19 +3,37 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import HomeScreen from '../screens/HomeScreen';
 import MessageScreen from '../screens/MessageScreen';
+import NewMessageScreen from '../screens/NewMessageScreen';
 
 const MsgStack = createStackNavigator();
-const MessageStack = () => {
+const MessageStack = () => { 
     return (
-      <MsgStack.Navigator
-        screenOptions={{
-          headerShown: false
-        }}
-      >
-        <MsgStack.Screen name="Home" component={HomeScreen} />
-        <MsgStack.Screen name="Message" component={MessageScreen} />
+      <MsgStack.Navigator>
+        <MsgStack.Screen 
+          name="Home"
+          component={HomeScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <MsgStack.Screen 
+          name="Message" 
+          component={MessageScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <MsgStack.Screen 
+          name="NewMessage" 
+          component={NewMessageScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
       </MsgStack.Navigator>
     );
   }
 
 export default MessageStack
+//export { MessageStack }
+              

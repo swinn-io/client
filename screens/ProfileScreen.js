@@ -4,7 +4,7 @@ import { Container, Header, Content, Button, ListItem, Text, Icon, Left, Body, R
 import { AuthContext } from '../services/context';
 import { CustomHeader } from '../components/common'
 
-export default function ProfileScreen(){
+export default function ProfileScreen(props){
 
     const { signOut } = React.useContext(AuthContext);
 
@@ -15,7 +15,7 @@ export default function ProfileScreen(){
 
     return (
         <Container>
-          <CustomHeader/>
+          <CustomHeader props={props}/>
           <Content>
             <ListItem icon
                 onPress={handleLogout}

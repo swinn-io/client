@@ -1,9 +1,8 @@
 import React from 'react';
 import { Container, Header, Left, Body, Right, Button, Title, Icon } from 'native-base';
 
-function SetTitle(title) {
 
-  //console.log("ROUTE=>", route)
+function SetTitle(title) {
   if(title){
     return (
       <Body style={styles.headerBody}>
@@ -20,39 +19,36 @@ function SetTitle(title) {
 
 const CustomHeader = (route) => {
 
-  //console.log("CUSTOM HEADER ROUTE =>", route.messageTitle)
-
   const { isSub, messageTitle } = route
-   if (isSub){
-    return (
-      <Header noShadow >
-          <Left style={styles.headerLeft}>
+   
+   return (
+    <Header noShadow >
+        <Left style={styles.headerLeft}>
+          {isSub? 
             <Button transparent
-              onPress={() => {
-                console.log(route.props.navigation.goBack())
-              }}
+              onPress={() => route.props.navigation.goBack()}
             >
                 <Icon name="ios-arrow-back" />
             </Button>
-          </Left>
-          {SetTitle(messageTitle)}
-          <Right style={styles.headerRight}/>
-      </Header>
-    );
-   }
-   else {
-    return (
-      <Header noShadow>
-          <Left>
-            <Button transparent>
-                <Icon name="menu" />
+            :
+            <Button transparent
+              onPress={() => {
+                try {
+                  route.props.navigation.openDrawer()
+                } catch (error) {
+                  console.log(error.message)
+                }
+              }}
+            >
+              <Icon name="menu" />
             </Button>
-          </Left>
-          {SetTitle(messageTitle)}
-          <Right/>
-      </Header>
-    );
-   }
+          }
+        </Left>
+        {SetTitle(messageTitle)}
+        <Right style={styles.headerRight}/>
+    </Header>
+  );
+
     
 };
 

@@ -14,5 +14,6 @@ module.exports = {
     //Message
     getAllMessages(){return this.root + '/api/message'},
     getSingleMessage(id){return this.root + `/api/message/${id}`},
+    createNewMessage(id){return this.root + `/api/message/${id}`}
     
 }

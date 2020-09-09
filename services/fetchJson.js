@@ -1,7 +1,19 @@
 import deviceStorage from './deviceStorage';
 
+const ThrowException = (error) => {
+
+  if(error === "Network request failed")
+  {
+    //throw new Error (`${503}`) // -- Service Unavailable
+    throw new Error (`${"Service Unavailable"}`) // -- Service Unavailable
+  }
+  else{
+    //throw new Error (`${500}`) // -- Internal Server Error
+    throw new Error (`${"Internal Server Error"}`) // -- Internal Server Error
+  }
+}
+
 const fetchJson = {
-    
     async GET( url ) {
         try {
 
@@ -14,14 +26,14 @@ const fetchJson = {
               'Content-Type': 'application/json',
               'Authorization': `${user.token_type} ${user.access_token}` , 
             },
+            timeout: 3000,
           });
           if (!response.ok){
               throw new Error (`HttpError: ${response.status} ${response.statusText}`)
           }
           return response.json()
         } catch (e) {
-          console.error("Error", e);
-          //throw new Error (`HttpError: ${response.status} ${response.statusText}`)
+          ThrowException(e.message)
         }
     },
     async POST( data, url ) {
@@ -36,15 +48,16 @@ const fetchJson = {
             'Content-Type': 'application/json',
             'Authorization': `${user.token_type} ${user.access_token}` , 
           },
+          timeout: 3000,
           body: JSON.stringify(data)
         });
+        console.log("GET RESPONSE", response)
         if (!response.ok){
             throw new Error (`HttpError: ${response.status} ${response.statusText}`)
         }
         return response.json()
       } catch (e) {
-        console.error("Error", e);
-        //throw new Error (`HttpError: ${response.status} ${response.statusText}`)
+        ThrowException(e.message);
       }
   },
 };

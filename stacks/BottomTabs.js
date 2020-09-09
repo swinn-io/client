@@ -1,37 +1,55 @@
 
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import MessageStack  from './MessageStack';
-import ProfileScreen from '../screens/ProfileScreen';
-import { Icon } from 'native-base';
 
-const Tab = createBottomTabNavigator();
+
+import { Container, Icon } from 'native-base';
+import MessageStack from './MessageStack';
+//import ProfileScreen from '../screens/ProfileScreen';
+
+
+
+
+const Tab = createBottomTabNavigator()
 const BottomTabs = () => {
   return (
-    <Tab.Navigator
-      screenOptions={{
-        headerShown: false
-      }}
-    >
-      <Tab.Screen
-        name="Home"
-        component={MessageStack}
-        options={{
-            tabBarIcon: ({tintColor}) =>  <Icon name="ios-home" size={24} color={tintColor}/>
-        }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{
-            tabBarIcon: ({tintColor}) =>  <Icon name="ios-person" size={24} color={tintColor}/>
-        }}
-      />
-    </Tab.Navigator>
-  );
+      <Tab.Navigator initialRouteName="Home">
+          <Tab.Screen
+              name="Home"
+              component={MessageStack}
+              options={{
+                  tabBarIcon: ({ tintColor }) => (
+                      <Container>
+                          <Icon
+                              style={[{ color: tintColor }]}
+                              size={28}
+                              name={'home'}
+                          />
+                      </Container>
+                  ),
+              }}
+          />
+          {/* <Tab.Screen
+              name="Profile"
+              component={ProfileScreen}
+              options={{
+                  tabBarIcon: ({ tintColor }) => (
+                      <Container>
+                          <Icon
+                              style={[{ color: tintColor }]}
+                              size={28}
+                              name={'person'}
+                          />
+                      </Container>
+                  ),
+              }}
+          /> */}
+      </Tab.Navigator>
+  )
 }
 
-export { BottomTabs }
+//export { BottomTabs }
+export default BottomTabs
 
 
 

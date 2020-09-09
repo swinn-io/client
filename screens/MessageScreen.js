@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Text, Content, Form, Item, Input, Left, Right, Button, Icon, List, ListItem, Thumbnail, Body, Footer}  from 'native-base';
+import { Container, Text, Content, Form, Item, Input, Left, Right, 
+    Button, Icon, List, ListItem, 
+    Thumbnail, Body, Footer, Fab}  from 'native-base';
 import { StyleSheet } from 'react-native'
 
 import constants from '../constants/constants';
@@ -13,7 +15,21 @@ export default function MessageScreen (props) {
     const [messageHistory, setMessageHistory] = useState([])
 
     useEffect(() => {
+
+        const parent = props.navigation.dangerouslyGetParent();
+        
+        //Hide Tab Bar
+        parent.setOptions({
+            tabBarVisible: false
+        });
+
         retrieveMessage()
+
+        //Unhide Tab Bar
+        return () =>
+            parent.setOptions({
+                tabBarVisible: true
+            });
     }, [])
 
     const retrieveMessage = async () => {
@@ -28,13 +44,17 @@ export default function MessageScreen (props) {
     }
 
     const handleNewMessage = async () => {
-        setNewMessage("");
+
+        try {
+            //await fetchJson.POST(constants.getSingleMessage(messageId));
+            
+            setNewMessage("");
+        } catch (error) {
+            console.log("Message Retrieve Error:", error)
+        }
     }
 
     const renderRow = (message) => {
-        console.log("MESSAGE ROW-------------", message)
-        console.log("MESSAGE ATTR-------------", message.attributes)
-        console.log("MESSAGE ATTR JSON-------------", message.attributes.body.JSON)
 
         //TO-DO parse messages
 
@@ -51,16 +71,9 @@ export default function MessageScreen (props) {
                     <Text>{JSON.stringify(message.attributes.body)}</Text>
                     {/* <Text note>{message.attributes.body[1]}</Text> */}
                 </Body>
-                {/* <Right>
-                    <Button transparent>
-                        <Icon numberOfLines={1} name="arrow-forward" />
-                    </Button>
-                </Right> */}
             </ListItem>
         );
       }
-
-
 
     return (
         <Container>
@@ -71,7 +84,7 @@ export default function MessageScreen (props) {
                 renderRow={(message)=>renderRow(message)}
             >
             </List>
-            <Footer style={styles.bottom}>
+            {/* <Footer style={styles.bottom}>
                 <Item>
                     <Input
                         placeholder='Write a message'
@@ -84,7 +97,32 @@ export default function MessageScreen (props) {
                         <Icon name='send' />
                     </Button>
                 </Item>
-            </Footer>
+            </Footer> */}
+            <Fab
+                active={true}
+                direction="up"
+                containerStyle={{ }}
+                style={{ backgroundColor: '#5067FF' }}
+                position="bottomRight"
+                onPress={()=> {
+                    props.navigation.navigate("NewMessage", {
+                        messageId: messageId,
+                    });
+                }}
+                // onPress={() => this.setState({ active: !this.state.active })}
+                >
+                <Icon name="add" />
+                {/* //If more screen is needed */}
+                {/* <Button style={{ backgroundColor: '#34A34F' }}>
+                <Icon name="logo-whatsapp" />
+                </Button>
+                <Button style={{ backgroundColor: '#3B5998' }}>
+                <Icon name="logo-facebook" />
+                </Button>
+                <Button disabled style={{ backgroundColor: '#DD5144' }}>
+                <Icon name="mail" />
+                </Button> */}
+            </Fab>
         </Container>
     );  
        

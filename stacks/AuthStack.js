@@ -16,7 +16,8 @@ const AuthStack = () => {
     );
   }
 
-export { AuthStack }
+//export { AuthStack }
+export default AuthStack
 
 
 
