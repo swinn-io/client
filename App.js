@@ -1,60 +1,118 @@
-import {StatusBar} from 'expo-status-bar';
-import React from 'react';
-import * as WebBrowser from 'expo-web-browser';
-import {makeRedirectUri, useAuthRequest} from 'expo-auth-session';
-import {Button, StyleSheet, Text, View} from 'react-native';
+import React, { useEffect } from 'react';
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
+// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+// import { createStackNavigator } from '@react-navigation/stack';
+// import { createDrawerNavigator } from '@react-navigation/drawer';
 
-WebBrowser.maybeCompleteAuthSession();
+import { Icon, Container } from 'native-base';
 
-// Endpoint
-const discovery = {
-    authorizationEndpoint: 'http://192.168.1.103/login',
-    tokenEndpoint: 'http://192.168.1.103/oauth/token',
-    revocationEndpoint: 'http://192.168.1.103/oauth/revoke',
-};
+//Screen Imports
+import LoadingScreen from './screens/LoadingScreen';
+import { AuthContext } from './services/context';
 
-export default function App() {
-    const [request, response, promptAsync] = useAuthRequest(
-        {
-            clientId: '',
-            scopes: [],
-            redirectUri: makeRedirectUri({
-                native: 'exp://redirect',
-                useProxy: false
-            }),
-        },
-        discovery
-    );
+//Stack Imports
+//import MessageStack from './stacks/MessageStack';
+import MenuStack from './stacks/MenuStack';
+//import BottomTabs from './stacks/BottomTabs';
+import AuthStack from './stacks/AuthStack'
+//import MainStack from './stacks/MainStack'
 
-    React.useEffect(() => {
-        if(response !== null) {
-            if (response?.type === 'success') {
-                const {code} = response.params;
+import deviceStorage from './services/deviceStorage';
+
+
+
+
+
+
+export default App = () => {
+
+    const [isLoading, setIsLoading] = React.useState(true);
+    const [user, setUser] = React.useState({});
+
+    const authContext = React.useMemo(() => ({
+        signIn: async ( user ) => {
+          try {
+            if( !isEmpty( user )){
+              await deviceStorage.saveUser(user);
+              setUser(user);
             }
-        }
-    }, [response]);
+          } catch (error) {
+            console.log("SignIn Error", error);
+          }
+        },
+        signOut: async () => {
+          try {
+            await deviceStorage.removeUser();
+            setUser({});
+          } catch (error) {
+            console.log("SignOut Error", error);
+          }
+        },
+        getUser: async () => {
+          try {
+            let user = await deviceStorage.getUser()
+            return user;
+          } catch (error) {
+            console.log("GetUser Error", error);
+          }
+        },
+    }));
 
-    return (
-        <View style={styles.container}>
-            <Text>Ping Pong Application</Text>
-            <Button
-                disabled={!request}
-                title="Login"
-                onPress={() => {
-                    promptAsync().then((r) => console.log(r));
-                }}
-            />
-            {response && <Text>Hello {response.params.callback.name}!</Text>}
-            <StatusBar style="auto"/>
-        </View>
-    );
+    const isEmpty = (obj) => {
+      return Object.entries(obj).length === 0 && obj.constructor === Object;
+    }
+
+    const handleUser = async () => {
+      try {
+        const user = await deviceStorage.getUser();
+        if ( user ) {
+          setUser(user);
+        }
+        setIsLoading(false);
+      } catch (error) {
+        console.log("handleUser", error);
+      }
+    }
+
+    useEffect(() => {
+      handleUser();
+    }, []);
+
+
+  const MyTheme = {
+    dark: true,
+    colors: {
+      primary: 'rgb(255, 45, 85)',
+      background: 'rgb(242, 242, 242)',
+      card: 'rgb(255, 255, 255)',
+      text: 'rgb(28, 28, 30)',
+      border: 'rgb(199, 199, 204)',
+      notification: 'rgb(255, 69, 58)',
+    },
+  };
+
+if ( isLoading ){
+  return (
+    <LoadingScreen></LoadingScreen>
+  );
+}
+else {
+  return (
+    <AuthContext.Provider value={authContext}>
+      <NavigationContainer>
+      { user.access_token? 
+        <MenuStack/>
+      :
+        <AuthStack/>
+      }
+      </NavigationContainer>
+    </AuthContext.Provider>
+)
+}
+    
+
+
+    
+    
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});
