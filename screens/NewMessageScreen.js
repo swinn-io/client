@@ -19,7 +19,7 @@ export default function NewMessageScreen (props) {
             //console.log("newMessage", newMessage)
             //console.log("MESSAGE ID", messageId)
             console.log("New Message Send Handle");
-            console.log("newMessage", newMessage
+            console.log("newMessage", newMessage);
 
 
         } catch (error) {
