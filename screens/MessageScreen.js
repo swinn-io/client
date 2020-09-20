@@ -1,23 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Text, Content, Form, Item, Input, Left, Right, 
-    Button, Icon, List, ListItem, 
-    Thumbnail, Body, Footer, Fab}  from 'native-base';
-import { StyleSheet } from 'react-native'
+import React, {useState, useEffect} from 'react';
+import {
+    Container, Text, Content, Form, Item, Input, Left, Right,
+    Button, Icon, List, ListItem,
+    Thumbnail, Body, Footer, Fab
+} from 'native-base';
+import {StyleSheet} from 'react-native'
 
 import constants from '../constants/constants';
 import fetchJson from '../services/fetchJson';
-import { CustomHeader } from '../components/common'
+import {CustomHeader} from '../components/common'
 
-export default function MessageScreen (props) {
+export default function MessageScreen(props) {
 
-    const { messageId, messageTitle } = props.route.params
+    const {messageId, messageTitle} = props.route.params
     const [newMessage, setNewMessage] = useState("")
     const [messageHistory, setMessageHistory] = useState([])
-
+    const [active, setActive] = useState(false)
     useEffect(() => {
 
         const parent = props.navigation.dangerouslyGetParent();
-        
+
         //Hide Tab Bar
         parent.setOptions({
             tabBarVisible: false
@@ -47,7 +49,7 @@ export default function MessageScreen (props) {
 
         try {
             //await fetchJson.POST(constants.getSingleMessage(messageId));
-            
+
             setNewMessage("");
         } catch (error) {
             console.log("Message Retrieve Error:", error)
@@ -65,7 +67,8 @@ export default function MessageScreen (props) {
                 // }}
             >
                 <Left>
-                    <Thumbnail source={{ uri: 'https://www.pngitem.com/pimgs/m/581-5813504_avatar-dummy-png-transparent-png.png' }} />
+                    <Thumbnail
+                        source={{uri: 'https://www.pngitem.com/pimgs/m/581-5813504_avatar-dummy-png-transparent-png.png'}}/>
                 </Left>
                 <Body>
                     <Text>{JSON.stringify(message.attributes.body)}</Text>
@@ -73,7 +76,7 @@ export default function MessageScreen (props) {
                 </Body>
             </ListItem>
         );
-      }
+    }
 
     return (
         <Container>
@@ -81,7 +84,7 @@ export default function MessageScreen (props) {
             <List
                 dataArray={messageHistory}
                 keyExtractor={messageHistory => messageHistory.id}
-                renderRow={(message)=>renderRow(message)}
+                renderRow={(message) => renderRow(message)}
             >
             </List>
             {/* <Footer style={styles.bottom}>
@@ -99,40 +102,31 @@ export default function MessageScreen (props) {
                 </Item>
             </Footer> */}
             <Fab
-                active={true}
+                active={active}
                 direction="up"
-                containerStyle={{ }}
-                style={{ backgroundColor: '#5067FF' }}
+                containerStyle={{}}
+                style={{backgroundColor: '#5067FF'}}
                 position="bottomRight"
-                onPress={()=> {
-                    props.navigation.navigate("NewMessage", {
-                        messageId: messageId,
-                    });
-                }}
-                // onPress={() => this.setState({ active: !this.state.active })}
-                >
-                <Icon name="add" />
-                {/* //If more screen is needed */}
-                {/* <Button style={{ backgroundColor: '#34A34F' }}>
-                <Icon name="logo-whatsapp" />
+                onPress={() => setActive(!active)}
+            >
+                <Icon name="add"/>
+                <Button style={{backgroundColor: '#F2786D'}}>
+                    <Icon name="cellular"/>
                 </Button>
-                <Button style={{ backgroundColor: '#3B5998' }}>
-                <Icon name="logo-facebook" />
+                <Button style={{backgroundColor: '#4B58A6'}}>
+                    <Icon name="compass"/>
                 </Button>
-                <Button disabled style={{ backgroundColor: '#DD5144' }}>
-                <Icon name="mail" />
-                </Button> */}
             </Fab>
         </Container>
-    );  
-       
+    );
+
 }
 
 
 const styles = StyleSheet.create({
     bottom: {
-        width: '100%', 
-        justifyContent: 'center', 
+        width: '100%',
+        justifyContent: 'center',
         alignItems: 'center',
     }
-  })
+})
