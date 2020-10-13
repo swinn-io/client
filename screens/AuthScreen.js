@@ -61,7 +61,9 @@ export default function AuthScreen() {
                     grant_type: grantType,
                     id,
                     secret,
-                    redirect
+                    redirect,
+                    user_id: res.params.callback.id,
+                    name: res.params.callback.name,
                 }
             })
             .then(async (data) => {
@@ -83,8 +85,10 @@ export default function AuthScreen() {
 
                         resp = await resp.json();
                         const { token_type, expires_in, access_token } = resp;
-                        const { grant_type, id, secret, redirect } = data
+                        const { grant_type, id, secret, redirect } = data;
                         const User = {
+                            id: data.user_id,
+                            name: data.name,
                             grant_type,
                             client_id: id,
                             client_secret: secret,
@@ -93,7 +97,7 @@ export default function AuthScreen() {
                             expires_in,
                             access_token,
                         }
-                        //console.log( User );
+
                         signIn( User );
                     }
                 }
