@@ -23,8 +23,7 @@ const fetchJson = {
             method: 'GET',
             headers: {
               Accept: 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': `${user.token_type} ${user.access_token}` , 
+              Authorization: `Bearer ${user.access_token}`,
             },
             timeout: 3000,
           });
@@ -45,13 +44,12 @@ const fetchJson = {
           method: 'POST',
           headers: {
             Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `${user.token_type} ${user.access_token}` , 
+            Authorization: `Bearer ${user.access_token}`,
           },
           timeout: 3000,
           body: JSON.stringify(data)
         });
-        console.log("GET RESPONSE", response)
+        console.log("POST RESPONSE", response)
         if (!response.ok){
             throw new Error (`HttpError: ${response.status} ${response.statusText}`)
         }
