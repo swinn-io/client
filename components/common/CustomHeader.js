@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container, Header, Left, Body, Right, Button, Title, Icon } from 'native-base';
+import EchoServer from "../EchoServer";
 
 
 function SetTitle(title) {
@@ -45,7 +46,9 @@ const CustomHeader = (route) => {
           }
         </Left>
         {SetTitle(messageTitle)}
-        <Right style={styles.headerRight}/>
+        <Right style={styles.headerRight}>
+            <EchoServer user={route.user} />
+        </Right>
     </Header>
   );
 
