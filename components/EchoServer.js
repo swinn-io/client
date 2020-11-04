@@ -37,7 +37,7 @@ class EchoServer extends React.Component {
     listenUserChannel(params) {
         try{
             const channel = `App.Models.User.${params.user.id}`;
-            console.log(`Attempting to connect "${channel}" channel`);
+            console.log('Attempting to connect Echo server.');
 
             let echo = new Echo({
                 broadcaster: 'socket.io',
@@ -52,12 +52,19 @@ class EchoServer extends React.Component {
                 },
             });
 
+            console.log(`Join "${channel}" channel`);
             echo
                 .private(channel)
                 .notification((notification) => {
                     alert(notification.type);
                     console.log(notification);
                 });
+
+            console.log('Join "online" channel');
+            echo.join('online')
+                .here(users => console.log(users))
+                .joining(user => console.log(`${user.name} is joining online channel.`))
+                .leaving(user => console.log(`${user.name} is leaving online channel.`));
 
             echo.connector.socket.on('subscription_error', (channel, data) => {
                 console.log('channel subscription error: ' + channel, data);
