@@ -2,8 +2,19 @@ import * as React from 'react';
 import Echo from 'laravel-echo';
 import socketio from 'socket.io-client';
 import constants from '../constants/constants';
-import {Text, View} from "native-base";
+import {Button} from "native-base";
 import { AuthContext } from '../services/context';
+import '../services/userService';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+
+const ICONS = {
+    online: 'satellite-dish',
+    offline: 'plug'
+}
+const COLORS = {
+    online: 'green',
+    offline: 'red'
+}
 
 class EchoServer extends React.Component {
     constructor(props) {
@@ -11,6 +22,9 @@ class EchoServer extends React.Component {
         this.state = {
             user: null,
             isConnected: false,
+            status: 1,
+            icon: ICONS.offline,
+            color: COLORS.offline,
         };
     }
 
@@ -37,7 +51,6 @@ class EchoServer extends React.Component {
     listenUserChannel(params) {
         try{
             const channel = `App.Models.User.${params.user.id}`;
-            console.log('Attempting to connect Echo server.');
 
             let echo = new Echo({
                 broadcaster: 'socket.io',
@@ -52,7 +65,6 @@ class EchoServer extends React.Component {
                 },
             });
 
-            console.log(`Join "${channel}" channel`);
             echo
                 .private(channel)
                 .notification((notification) => {
@@ -62,9 +74,14 @@ class EchoServer extends React.Component {
 
             console.log('Join "online" channel');
             echo.join('online')
-                .here(users => console.log(users))
-                .joining(user => console.log(`${user.name} is joining online channel.`))
-                .leaving(user => console.log(`${user.name} is leaving online channel.`));
+                .here(users => {
+                    if(users.find(data => data.id === params.user.id)) {
+                        this.setState({
+                            icon: ICONS.online,
+                            color: COLORS.online
+                        });
+                    }
+                });
 
             echo.connector.socket.on('subscription_error', (channel, data) => {
                 console.log('channel subscription error: ' + channel, data);
@@ -75,9 +92,11 @@ class EchoServer extends React.Component {
     }
 
     render() {
-        return <View>
-            <Text>{this.state.user && this.state.user.name}</Text>
-        </View>
+        return (
+            <Button transparent>
+                <FontAwesome5 name={this.state.icon} style={{fontSize:20, color: this.state.color}} />
+            </Button>
+        )
     }
 }
 
