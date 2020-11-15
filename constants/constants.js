@@ -16,7 +16,7 @@ module.exports = {
     //User
     contactUserEndpoint(){return this.root + '/api/user'},
     profileEndpoint(){return this.root + '/api/user/me'},
-    userEndpoint(id){return this.root + '/api/user/${id}'},
+    userEndpoint(id){return `${this.root}/api/user/${id}`},
 
     //Message
     getAllMessages(){return this.root + '/api/message'},
