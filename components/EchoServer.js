@@ -4,7 +4,6 @@ import socketio from 'socket.io-client';
 import constants from '../constants/constants';
 import {Button} from "native-base";
 import { AuthContext } from '../services/context';
-import '../services/userService';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 const ICONS = {
