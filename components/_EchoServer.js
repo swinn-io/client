@@ -1,9 +1,9 @@
-import React, { useEffect, useContext } from 'react';
+import * as React from 'react';
 import Echo from 'laravel-echo';
 import socketio from 'socket.io-client';
 import constants from '../constants/constants';
 import {Button} from "native-base";
-import { AuthContext, MessageContext } from '../services/context';
+import { AuthContext } from '../services/context';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 const ICONS = {
@@ -15,55 +15,39 @@ const COLORS = {
     offline: 'red'
 }
 
+class EchoServer extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            user: null,
+            isConnected: false,
+            status: 1,
+            icon: ICONS.offline,
+            color: COLORS.offline,
+        };
+    }
 
-export default function EchoServer(props){
-
-    const { getMessages, setNewMessages } = React.useContext(MessageContext);
-    const { getUser } = React.useContext(AuthContext);
-
-    const [state, setState] = React.useState({
-        user: null,
-        isConnected: false,
-        status: 1,
-        icon: ICONS.offline,
-        color: COLORS.offline,
-    });
-
-
-    const handleUser = async () => {
-        try {
-            if(!state.user){
-                await getUser().then(user => {
-                    setState({ user: user });
-                    listenUserChannel(user);
+    componentDidMount() {
+        let context = this.context;
+        (async () => {
+            try {
+                await context.getUser().then(user => {
+                    this.setState({ user: user});
+                    this.listenUserChannel(user);
                 }).catch(error => console.log(error));
+            } catch (e) {
+                console.log(e)
             }
-        } catch (e) {
-           console.log("Error", e);
-        }
+        })();
     }
 
-    const handleMessages = async () => {
-        try {
-            setNewMessages();
-        } catch (e) {
-           console.log("Error", e);
-        }
+    checkConnection() {
+        this.setState({
+            isConnected: this.echo ? this.echo.connector.socket.connected : false
+        });
     }
 
-
-    useEffect(() => {
-        handleUser();
-        handleMessages();
-      }, []);
-
-    // const checkConnection = () => {
-    //     setState({
-    //         //isConnected: this.echo ? this.echo.connector.socket.connected : false
-    //     });
-    // }
-
-    const listenUserChannel = (params) => {
+    listenUserChannel(params) {
         try{
             const channel = `App.Models.User.${params.user.id}`;
 
@@ -91,7 +75,7 @@ export default function EchoServer(props){
             echo.join('online')
                 .here(users => {
                     if(users.find(data => data.id === params.user.id)) {
-                        setState({
+                        this.setState({
                             icon: ICONS.online,
                             color: COLORS.online
                         });
@@ -106,13 +90,15 @@ export default function EchoServer(props){
         }
     }
 
-    return (
-        <Button transparent>
-            <FontAwesome5 name={state.icon} style={{fontSize:20, color: state.color}} />
-        </Button>
-      );
+    render() {
+        return (
+            <Button transparent>
+                <FontAwesome5 name={this.state.icon} style={{fontSize:20, color: this.state.color}} />
+            </Button>
+        )
+    }
 }
 
-//EchoServer.contextType = MessageContext;
+EchoServer.contextType = AuthContext;
 
-//export default EchoServer;
+export default EchoServer;

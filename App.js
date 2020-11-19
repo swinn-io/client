@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 // import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // import { createStackNavigator } from '@react-navigation/stack';
@@ -8,7 +8,7 @@ import { Icon, Container } from 'native-base';
 
 //Screen Imports
 import LoadingScreen from './screens/LoadingScreen';
-import { AuthContext } from './services/context';
+import { AuthContext, MessageContext } from './services/context';
 
 //Stack Imports
 //import MessageStack from './stacks/MessageStack';
@@ -26,10 +26,11 @@ import deviceStorage from './services/deviceStorage';
 
 export default App = () => {
 
-    const [isLoading, setIsLoading] = React.useState(true);
-    const [user, setUser] = React.useState({});
+    const [isLoading, setIsLoading] = useState(true);
+    const [user, setUser] = useState({});
+    const [messages, setMessages] = useState([]);
 
-    const authContext = React.useMemo(() => ({
+    const authContext = useMemo(() => ({
         signIn: async ( user ) => {
           try {
             if( !isEmpty( user )){
@@ -56,6 +57,15 @@ export default App = () => {
             console.log("GetUser Error", error);
           }
         },
+    }));
+
+    const messageContext = useMemo(()=> ({
+      getMessages: () => {
+        return messages;
+      },
+      setNewMessages: () => {
+        console.log("TO DO: Update messages state")
+      }
     }));
 
     const isEmpty = (obj) => {
@@ -99,6 +109,7 @@ if ( isLoading ){
 else {
   return (
     <AuthContext.Provider value={authContext}>
+      <MessageContext.Provider value={messageContext}>
       <NavigationContainer>
       { user.access_token? 
         <MenuStack/>
@@ -106,6 +117,7 @@ else {
         <AuthStack/>
       }
       </NavigationContainer>
+      </MessageContext.Provider>
     </AuthContext.Provider>
 )
 }
