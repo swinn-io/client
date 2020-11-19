@@ -63,7 +63,12 @@ export default function HomeScreen (props) {
                     subject: thread.attributes.subject
                 });
             })
-            setMessages(msg);
+            if(threads.length > 0){
+                setMessages(msg);
+            }
+            else {
+                setError("You don't have any messages yet");
+            }
         } catch (error) {
             console.log("HomeScreen GetMessages Error", error.message);
             setError(error.message)
