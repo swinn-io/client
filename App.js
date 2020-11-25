@@ -8,7 +8,9 @@ import { Icon, Container } from 'native-base';
 
 //Screen Imports
 import LoadingScreen from './screens/LoadingScreen';
-import { AuthContext, MessageContext } from './services/context';
+//import { AuthContext, MessageContext } from './services/context';
+
+import { AuthContext } from './services/context';
 
 //Stack Imports
 //import MessageStack from './stacks/MessageStack';
@@ -19,6 +21,8 @@ import AuthStack from './stacks/AuthStack'
 
 import deviceStorage from './services/deviceStorage';
 
+import MessageStore from './services/messageStore';
+
 
 
 
@@ -28,7 +32,6 @@ export default App = () => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState({});
-    const [messages, setMessages] = useState([]);
 
     const authContext = useMemo(() => ({
         signIn: async ( user ) => {
@@ -59,15 +62,6 @@ export default App = () => {
         },
     }));
 
-    const messageContext = useMemo(()=> ({
-      getMessages: () => {
-        return messages;
-      },
-      setNewMessages: () => {
-        console.log("TO DO: Update messages state")
-      }
-    }));
-
     const isEmpty = (obj) => {
       return Object.entries(obj).length === 0 && obj.constructor === Object;
     }
@@ -80,7 +74,7 @@ export default App = () => {
         }
         setIsLoading(false);
       } catch (error) {
-        console.log("handleUser", error);
+        console.log("handleUser in APP.js", error);
       }
     }
 
@@ -109,15 +103,15 @@ if ( isLoading ){
 else {
   return (
     <AuthContext.Provider value={authContext}>
-      <MessageContext.Provider value={messageContext}>
-      <NavigationContainer>
-      { user.access_token? 
-        <MenuStack/>
-      :
-        <AuthStack/>
-      }
-      </NavigationContainer>
-      </MessageContext.Provider>
+      <MessageStore>
+        <NavigationContainer>
+        { user.access_token? 
+          <MenuStack/>
+        :
+          <AuthStack/>
+        }
+        </NavigationContainer>
+      </MessageStore>
     </AuthContext.Provider>
 )
 }

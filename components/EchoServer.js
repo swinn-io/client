@@ -3,9 +3,11 @@ import Echo from 'laravel-echo';
 import socketio from 'socket.io-client';
 import constants from '../constants/constants';
 import {Button} from "native-base";
-import { AuthContext, MessageContext } from '../services/context';
+// import { AuthContext, MessageContext } from '../services/context';
+import { AuthContext } from '../services/context';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
+import { MessageContext } from '../services/messageStore';
 const ICONS = {
     online: 'satellite-dish',
     offline: 'plug'
@@ -18,8 +20,8 @@ const COLORS = {
 
 export default function EchoServer(props){
 
-    const { getMessages, setNewMessages } = React.useContext(MessageContext);
     const { getUser } = React.useContext(AuthContext);
+    const [messageState, dispatch] = useContext(MessageContext)
 
     const [state, setState] = React.useState({
         user: null,
@@ -43,9 +45,9 @@ export default function EchoServer(props){
         }
     }
 
-    const handleMessages = async () => {
+    const handleNewMessage = async (notification) => {
         try {
-            setNewMessages();
+            await dispatch({ type: 'ADD_MESSAGE', action: notification})
         } catch (e) {
            console.log("Error", e);
         }
@@ -54,7 +56,7 @@ export default function EchoServer(props){
 
     useEffect(() => {
         handleUser();
-        handleMessages();
+        //handleMessages();
       }, []);
 
     // const checkConnection = () => {
@@ -83,8 +85,8 @@ export default function EchoServer(props){
             echo
                 .private(channel)
                 .notification((notification) => {
-                    alert(notification.type);
-                    console.log(notification);
+                    //alert(notification.type);
+                    handleNewMessage(notification)
                 });
 
             console.log('Join "online" channel');

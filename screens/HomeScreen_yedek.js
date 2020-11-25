@@ -7,26 +7,25 @@ import { CustomHeader } from '../components/common'
 import constants from '../constants/constants';
 import fetchJson from '../services/fetchJson';
 
-import { MessageContext } from '../services/messageStore';
+import { MessageContext } from '../services/context';
 
 export default function HomeScreen (props) {
 
+    const [messages, setMessages] = useState([]);
     const [error, setError] = useState(false)
-    const [messageState, dispatch] = useContext(MessageContext)
+
+    //const messageContext = useContext(MessageContext);
+    //messageContext.getMessages = getMessages;
 
     useEffect(() => {
-        fetchMessages();
+        getMessages()
     }, [])
-
-    useEffect(() => {
-        console.log("MESSAGE STATE CHANGED");
-    }, [messageState])
 
     const refreshPage = () => {
 
         //If refresh is needed
-        //setNewMessages([])
-        fetchMessages()
+        setMessages([])
+        getMessages()
     }
 
     const renderRow = (message) => {
@@ -57,25 +56,20 @@ export default function HomeScreen (props) {
         );
       }
 
-    const fetchMessages = async () => {
+    const getMessages = async () => {
         try {
             setError(false)
             let messages = await fetchJson.GET(constants.getAllMessages());
-            
             let msg = [];
-            let threads = messages.data
+            let threads = messages.data;
             threads.forEach ((thread) => {
-
-                console.log("THREAD", thread)
                 msg.push({
                     id: thread.id,
                     subject: thread.attributes.subject
                 });
             })
-
             if(threads.length > 0){
-                dispatch({type: 'SET_MESSAGES', payload: msg});
-                //console.log("MESSAGES", messageState)
+                setMessages(msg);
             }
             else {
                 setError("You don't have any messages yet");
@@ -89,9 +83,9 @@ export default function HomeScreen (props) {
     return (
         <Container>
             <CustomHeader props={props}/>
-            { messageState.messages.length >0?
+            { messages.length>0?
                 <List
-                    dataArray={messageState.messages}
+                    dataArray={messages}
                     keyExtractor={message => message.id}
                     renderRow={(message)=>renderRow(message)}
                     // refreshControl={
