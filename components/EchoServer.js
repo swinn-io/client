@@ -54,7 +54,8 @@ export default function EchoServer(props){
             if (notification_type.includes("MessageCreated")) {
                 // await dispatch({ type: 'ADD_MESSAGE', action: notification})
                 //TO-DO: Message will be added here
-                await dispatch({ type: 'ADD_THREAD_WITH_MESSAGE', action: notification})
+                await dispatch({ type: 'ADD_THREAD', action: notification})
+                await dispatch({ type: 'ADD_MESSAGES', action: notification})
             }
             else if (notification_type.includes("ParticipantCreated")) {
                 //await dispatch({ type: 'ADD_THREAD', action: notification})

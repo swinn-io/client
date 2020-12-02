@@ -24,13 +24,11 @@ export default function HomeScreen (props) {
     }, [messageState])
 
     const refreshPage = () => {
-
         //If refresh is needed
         fetchMessages()
     }
 
     const renderRow = (thread) => {
-        // console.log("THREAD", thread)
         return (
             <ListItem thumbnail
                 onPress={() => {
@@ -65,12 +63,9 @@ export default function HomeScreen (props) {
             let msg = [];
             let threads = response.data
             threads.forEach ((thread) => {
-
-                // console.log("THREAD", thread)
                 msg.push({
                     thread_id: thread.id,
-                    subject: thread.attributes.subject,
-                    thread_messages: []
+                    subject: thread.attributes.subject
                 });
             })
 
