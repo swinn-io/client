@@ -20,7 +20,7 @@ function SetTitle(title) {
 
 const CustomHeader = (route) => {
 
-  const { isSub, messageTitle } = route
+  const { isSub, threadTitle } = route
    
    return (
     <Header noShadow >
@@ -37,7 +37,7 @@ const CustomHeader = (route) => {
                 try {
                   route.props.navigation.openDrawer()
                 } catch (error) {
-                  console.log(error.message)
+                  console.log("Custom Header Error" , error.message)
                 }
               }}
             >
@@ -45,7 +45,7 @@ const CustomHeader = (route) => {
             </Button>
           }
         </Left>
-        {SetTitle(messageTitle)}
+        {SetTitle(threadTitle)}
         <Right style={styles.headerRight}>
             <EchoServer user={route.user} />
         </Right>

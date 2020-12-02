@@ -12,7 +12,7 @@ import {CustomHeader} from '../components/common'
 
 export default function MessageScreen(props) {
 
-    const {messageId, messageTitle} = props.route.params
+    const {threadId, threadTitle} = props.route.params
     const [newMessage, setNewMessage] = useState("")
     const [messageHistory, setMessageHistory] = useState([])
     const [active, setActive] = useState(false)
@@ -37,7 +37,9 @@ export default function MessageScreen(props) {
     const retrieveMessage = async () => {
 
         try {
-            let messageHistory = await fetchJson.GET(constants.getSingleMessage(messageId));
+            console.log("ThreadId", threadId);
+            let messageHistory = await fetchJson.GET(constants.getSingleMessage(threadId));
+            // console.log("Message History", messageHistory)
             setMessageHistory(messageHistory.data.attributes.messages);
         } catch (error) {
             console.log("Message Retrieve Error:", error)
@@ -48,9 +50,19 @@ export default function MessageScreen(props) {
     const handleNewMessage = async () => {
 
         try {
-            //await fetchJson.POST(constants.getSingleMessage(messageId));
 
-            setNewMessage("");
+            //generate random number between -100 and 100 for test purposes
+            var ranNum = Math.ceil(Math.random() * 100) * (Math.round(Math.random()) ? 1 : -1)
+
+            const newMessage = { content: [ranNum] }
+            const api = constants.createNewMessage(threadId);
+
+            console.log("response")
+            console.log("MESSAGE TO BE SENT => ", newMessage)
+            console.log("API TO SENT TO => ", api)
+
+            let response = await fetchJson.POST(newMessage, constants.createNewMessage(threadId));
+
         } catch (error) {
             console.log("Message Retrieve Error:", error)
         }
@@ -80,7 +92,7 @@ export default function MessageScreen(props) {
 
     return (
         <Container>
-            <CustomHeader isSub={true} messageTitle={messageTitle} props={props}/>
+            <CustomHeader isSub={true} threadTitle={threadTitle} props={props}/>
             <List
                 dataArray={messageHistory}
                 keyExtractor={messageHistory => messageHistory.id}
@@ -110,7 +122,9 @@ export default function MessageScreen(props) {
                 onPress={() => setActive(!active)}
             >
                 <Icon name="add"/>
-                <Button style={{backgroundColor: '#F2786D'}}>
+                <Button style={{backgroundColor: '#F2786D'}}
+                    onPress={handleNewMessage}
+                >
                     <Icon name="cellular"/>
                 </Button>
                 <Button style={{backgroundColor: '#4B58A6'}}>

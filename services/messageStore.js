@@ -2,7 +2,7 @@ import React, {createContext, useReducer} from "react";
 import MessageReducer from './messageReducer'
 
 const initialState = {
-    messages: []
+    threads: []
 }
 
 const MessageStore = ({children}) => {

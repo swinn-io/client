@@ -39,18 +39,23 @@ const fetchJson = {
       try {
 
         let user = await deviceStorage.getUser()
-
         let response = await fetch(url, {
           method: 'POST',
           headers: {
             Accept: 'application/json',
             Authorization: `Bearer ${user.access_token}`,
+            'Content-Type': 'application/json'
           },
           timeout: 3000,
+          // body: JSON.stringify(data)
           body: JSON.stringify(data)
         });
-        console.log("POST RESPONSE", response)
+
         if (!response.ok){
+            //to log response 
+            response.json().then(json => {
+              console.log(json);
+            });
             throw new Error (`HttpError: ${response.status} ${response.statusText}`)
         }
         return response.json()

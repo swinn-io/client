@@ -20,24 +20,24 @@ export default function HomeScreen (props) {
 
     useEffect(() => {
         console.log("MESSAGE STATE CHANGED");
+        console.log("MESSAGE STATE: ", messageState.threads);
     }, [messageState])
 
     const refreshPage = () => {
 
         //If refresh is needed
-        //setNewMessages([])
         fetchMessages()
     }
 
-    const renderRow = (message) => {
-
+    const renderRow = (thread) => {
+        // console.log("THREAD", thread)
         return (
             <ListItem thumbnail
                 onPress={() => {
                     props.navigation.navigate("Message", {
-                        messageId: message.id,
-                        messageTitle: message.subject,
-                        onGoBack: refreshPage()
+                        threadId: thread.thread_id,
+                        threadTitle: thread.subject,
+                        // onGoBack: refreshPage()
                     });
                 }}
             >
@@ -45,8 +45,8 @@ export default function HomeScreen (props) {
                     <Thumbnail source={{ uri: 'https://www.pngitem.com/pimgs/m/581-5813504_avatar-dummy-png-transparent-png.png' }} />
                 </Left>
                 <Body>
-                    <Text>{message.subject}</Text>
-                    <Text note numberOfLines={1}>Chat text</Text>
+                    <Text>{thread.subject}</Text>
+                    <Text note numberOfLines={1}>{thread.thread_id}</Text>
                 </Body>
                 <Right>
                     <Button transparent>
@@ -60,22 +60,22 @@ export default function HomeScreen (props) {
     const fetchMessages = async () => {
         try {
             setError(false)
-            let messages = await fetchJson.GET(constants.getAllMessages());
+            let response = await fetchJson.GET(constants.getAllMessages());
             
             let msg = [];
-            let threads = messages.data
+            let threads = response.data
             threads.forEach ((thread) => {
 
-                console.log("THREAD", thread)
+                // console.log("THREAD", thread)
                 msg.push({
-                    id: thread.id,
-                    subject: thread.attributes.subject
+                    thread_id: thread.id,
+                    subject: thread.attributes.subject,
+                    thread_messages: []
                 });
             })
 
             if(threads.length > 0){
-                dispatch({type: 'SET_MESSAGES', payload: msg});
-                //console.log("MESSAGES", messageState)
+                dispatch({type: 'SET_THREADS', payload: msg});
             }
             else {
                 setError("You don't have any messages yet");
@@ -89,10 +89,10 @@ export default function HomeScreen (props) {
     return (
         <Container>
             <CustomHeader props={props}/>
-            { messageState.messages.length >0?
+            { messageState.threads.length >0?
                 <List
-                    dataArray={messageState.messages}
-                    keyExtractor={message => message.id}
+                    dataArray={messageState.threads}
+                    keyExtractor={message => message.thread_id}
                     renderRow={(message)=>renderRow(message)}
                     // refreshControl={
                     //     <RefreshControl

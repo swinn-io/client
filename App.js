@@ -55,6 +55,8 @@ export default App = () => {
         getUser: async () => {
           try {
             let user = await deviceStorage.getUser()
+            //When access_token is needed
+            //console.log("USER", user);
             return user;
           } catch (error) {
             console.log("GetUser Error", error);
