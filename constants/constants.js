@@ -1,9 +1,9 @@
 module.exports = {
 
     //Root
-    root: 'https://pingpongmessenger.com',
+    root: 'https://swinn.io',
     //Echo
-    echoServer: 'https://pingpongmessenger.com',
+    echoServer: 'https://swinn.io',
     echoServerPort: '6001',
     //Secret
     secret: 'secret',
