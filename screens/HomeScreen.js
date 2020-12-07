@@ -13,6 +13,7 @@ export default function HomeScreen (props) {
 
     const [error, setError] = useState(false)
     const [messageState, dispatch] = useContext(MessageContext)
+    const [active, setActive] = useState(true)
 
     useEffect(() => {
         fetchMessages();
@@ -20,7 +21,7 @@ export default function HomeScreen (props) {
 
     useEffect(() => {
         console.log("MESSAGE STATE CHANGED");
-        console.log("MESSAGE STATE: ", messageState.threads);
+        console.log("MESSAGE STATE THREADS: ", messageState.threads);
     }, [messageState])
 
     const refreshPage = () => {
@@ -59,7 +60,6 @@ export default function HomeScreen (props) {
         try {
             setError(false)
             let response = await fetchJson.GET(constants.getAllMessages());
-            
             let msg = [];
             let threads = response.data
             threads.forEach ((thread) => {
@@ -81,11 +81,25 @@ export default function HomeScreen (props) {
         }
     }
 
+    const createNewThread = async () => {
+        try {
+            setActive(!active)
+            setError(false)
+            props.navigation.navigate("NewThread", {
+                threadTitle: "Create new thread",
+            });
+        }
+        catch (error) {
+            console.log("Error Home Screen - Create New Thread", error);
+        }
+    }
+
     return (
         <Container>
             <CustomHeader props={props}/>
             { messageState.threads.length >0?
-                <List
+                <Container>
+                    <List
                     dataArray={messageState.threads}
                     keyExtractor={message => message.thread_id}
                     renderRow={(message)=>renderRow(message)}
@@ -97,6 +111,17 @@ export default function HomeScreen (props) {
                     //     />}
                 >
                 </List>
+                    <Fab
+                    active={active}
+                    direction="up"
+                    containerStyle={{}}
+                    style={{backgroundColor: '#5067FF'}}
+                    position="bottomRight"
+                    onPress={() => createNewThread()}
+                >
+                    <Icon name="add"/>
+                </Fab>
+                </Container>
                 :
                 <Content contentContainerStyle={{
                     flex: 1,

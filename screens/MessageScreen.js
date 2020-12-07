@@ -21,7 +21,7 @@ export default function MessageScreen(props) {
     const [messageState, dispatch] = useContext(MessageContext)
     useEffect(() => {
         console.log("MESSAGE STATE CHANGED");
-        console.log("MESSAGE STATE: ", messageState.messages);
+        console.log("MESSAGE STATE MESSAGES: ", messageState.messages);
     }, [messageState])
 
     useEffect(() => {

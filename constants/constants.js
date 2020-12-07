@@ -19,8 +19,12 @@ module.exports = {
     userEndpoint(id){return `${this.root}/api/user/${id}`},
 
     //Message
-    getAllMessages(){return this.root + '/api/message'},
     getSingleMessage(id){return this.root + `/api/message/${id}`},
-    createNewMessage(id){return this.root + `/api/message/${id}`}
+    createNewMessage(id){return this.root + `/api/message/${id}`},
+
+
+    //Thread
+    getAllMessages(){return this.root + '/api/message'},
+    createNewThread(){return this.root + `/api/message`}
     
 }

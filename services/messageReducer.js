@@ -9,7 +9,6 @@ const MessageReducer = (messageState, action) => {
                     threads: action.payload
                 };
             case 'ADD_THREAD':
-                let foundIndex = -1;
                 const foundThread =  messageState.threads.find(thd => thd.thread_id === action.action.message.thread_id);
                 const thread_id = action.action.message.thread_id;
                 const thread_subject = action.action.message.thread.subject;
@@ -20,7 +19,7 @@ const MessageReducer = (messageState, action) => {
                 if (!foundThread) {
                     return {
                         ...messageState,
-                        messages: ([newThreadToSave]).concat(messageState.threads)
+                        threads: ([newThreadToSave]).concat(messageState.threads)
                     };
                 }
                 else {

@@ -48,17 +48,9 @@ export default function EchoServer(props){
     const handleNewMessage = async (notification) => {
         try {
             const notification_type = notification.type;
-
-            console.log(`Notification => `, notification);
-            // console.log("Notification type: ", notification_type);
             if (notification_type.includes("MessageCreated")) {
-                // await dispatch({ type: 'ADD_MESSAGE', action: notification})
-                //TO-DO: Message will be added here
                 await dispatch({ type: 'ADD_THREAD', action: notification})
                 await dispatch({ type: 'ADD_MESSAGES', action: notification})
-            }
-            else if (notification_type.includes("ParticipantCreated")) {
-                //await dispatch({ type: 'ADD_THREAD', action: notification})
             }
         } catch (e) {
            console.log("Error", e);
@@ -97,8 +89,9 @@ export default function EchoServer(props){
             echo
                 .private(channel)
                 .notification((notification) => {
+
                     handleNewMessage(notification);
-                    //console.log(`Notification ${notification.type} =>`, notification);
+                    console.log(`Notification ${notification.type} =>`, notification);
                 });
 
             console.log('Join "online" channel');

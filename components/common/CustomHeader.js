@@ -13,7 +13,7 @@ function SetTitle(title) {
   }
   return (
     <Body style={styles.headerBody}>
-      <Title>Ping Pong</Title>
+      <Title>Swinn</Title>
     </Body>
   );
 }
