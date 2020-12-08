@@ -25,6 +25,12 @@ module.exports = {
 
     //Thread
     getAllMessages(){return this.root + '/api/message'},
-    createNewThread(){return this.root + `/api/message`}
+    createNewThread(){return this.root + `/api/message`},
+
+    //Contacts
+    getAllContacts(){return this.root + `/api/contact`},
+    getSingleContact(){return this.root + `/api/contact/${id}`}
+
+
     
 }

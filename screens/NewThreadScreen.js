@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Text, Content, Form, Item, 
   Input, Left, Right, Button, Icon, List,
-   ListItem, Thumbnail, Body, Footer, InputGroup}  from 'native-base';
+   ListItem, Thumbnail, Body, Footer, InputGroup, Picker}  from 'native-base';
 import { StyleSheet } from 'react-native'
 
 import constants from '../constants/constants';
 import fetchJson from '../services/fetchJson';
 import { CustomHeader } from '../components/common'
+import ContactList from '../components/ContactList';
 
 export default function NewThreadScreen (props) {
 
@@ -14,13 +15,23 @@ export default function NewThreadScreen (props) {
     console.log("TITLE", threadTitle)
     const [newThread, setNewThread] = useState({})
     const [pageError, setPageError] = useState()
+    const [selectedUsers, setSelectedUsers] = useState([])
+
+    useEffect(() => {
+      console.log("Selected Users Changed => ", selectedUsers)
+  }, [selectedUsers])
 
     const handleNewThread = async () => {
         try {
           //Convert content to array
           newThread.content = [newThread.content];
-          await fetchJson.POST(newThread, constants.createNewThread());
-          //Go back to home page
+          newThread.recipients = selectedUsers;
+          const response = await fetchJson.POST(newThread, constants.createNewThread());
+          
+          console.log("RESPONSE => ", response)
+          // //Go back to home page
+          
+          // console.log("NEW THREAD => ", newThread)
           setNewThread({});
           props.navigation.goBack()
 
@@ -34,7 +45,6 @@ export default function NewThreadScreen (props) {
 
     }
 
-    // const items = [{ "key": "0", name: "subject" }, { "key": "1", name: "content" }];
     const handleTextChange = (text, name) => {
 
       setNewThread({
@@ -43,7 +53,6 @@ export default function NewThreadScreen (props) {
       })
 
     }
-
 
     return (
         <Container>
@@ -58,7 +67,7 @@ export default function NewThreadScreen (props) {
                   value={newThread["subject"]}
                   />
               </Item>
-              <Item last>
+              <Item>
                 <Input 
                   placeholder="Content" 
                   name="content"
@@ -66,7 +75,12 @@ export default function NewThreadScreen (props) {
                   value={newThread["content"]}
                 />
               </Item>
-            <Item>
+              <Item picker>
+                <ContactList users={selectedUsers} addSelectedUser={setSelectedUsers}>
+
+                </ContactList>
+              </Item>
+              <Item>
                 <Button primary style={{alignSelf: 'flex-start', width: '95%'}}
                           onPress={handleNewThread}
                       >
@@ -74,13 +88,8 @@ export default function NewThreadScreen (props) {
                         <Icon name='send' />
                 </Button>
               </Item>
-
-              {/* <InputGroup iconRight error>
-                    <Icon name='ios-close-circle' style={{color:'red'}}/>
-                    <Input placeholder={pageError}/>
-              </InputGroup> */}
             </Form>
-            
+      
           </Content>
         </Container>
       );
