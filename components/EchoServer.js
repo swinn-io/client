@@ -31,7 +31,6 @@ export default function EchoServer(props){
         color: COLORS.offline,
     });
 
-
     const handleUser = async () => {
         try {
             if(!state.user){

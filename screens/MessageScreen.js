@@ -78,12 +78,13 @@ export default function MessageScreen(props) {
         try {
 
             //generate random number between -100 and 100 for test purposes
-            var ranNum = Math.ceil(Math.random() * 100) * (Math.round(Math.random()) ? 1 : -1)
+            var ranNum1 = Math.ceil(Math.random() * 100) * (Math.round(Math.random()) ? 1 : -1)
+            var ranNum2 = Math.ceil(Math.random() * 100) * (Math.round(Math.random()) ? 1 : -1)
 
-            const newMessage = { content: [ranNum] }
-            const api = constants.createNewMessage(threadId);
+            const newMessage = { content: [ranNum1, ranNum2] }
+            console.log("NEW MESSAGE IN MESSAGE SCREEN", newMessage)
 
-            let response = await fetchJson.POST(newMessage, constants.createNewMessage(threadId));
+            await fetchJson.POST(newMessage, constants.createNewMessage(threadId));
 
         } catch (error) {
             console.log("Message Retrieve Error:", error)

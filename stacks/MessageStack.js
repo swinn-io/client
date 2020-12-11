@@ -5,6 +5,7 @@ import HomeScreen from '../screens/HomeScreen';
 import MessageScreen from '../screens/MessageScreen';
 import NewMessageScreen from '../screens/NewMessageScreen';
 import NewThreadScreen from '../screens/NewThreadScreen';
+import ContactSelect from '../screens/ContactSelect';
 
 const MsgStack = createStackNavigator();
 const MessageStack = () => { 
@@ -34,6 +35,13 @@ const MessageStack = () => {
         <MsgStack.Screen 
           name="NewThread" 
           component={NewThreadScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <MsgStack.Screen 
+          name="ContactSelect" 
+          component={ContactSelect}
           options={{
             headerShown: false,
           }}
