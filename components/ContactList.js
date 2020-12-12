@@ -31,7 +31,7 @@ export default function ContactList( { users, setSelectedUser, closeModal} ) {
         try {
             //add if user doesn't exist
             if (!(users.filter(user => user.id === contact.id).length > 0)) {
-                console.log(`Contact ${contact.name} has been added to list`);
+                // console.log(`Contact ${contact.name} has been added to list`);
                 setSelectedUser([...users, contact])
             }
             //remove if user exists
@@ -62,7 +62,6 @@ export default function ContactList( { users, setSelectedUser, closeModal} ) {
             (contacts).map((contact) => {
                 let username = contact.attributes.name;
                 let userId = contact.attributes.source.id;
-                console.log("Contact => ", contact)
                 return (
                     <ListItem
                         noIndent
@@ -100,7 +99,7 @@ export default function ContactList( { users, setSelectedUser, closeModal} ) {
                 danger
                 onPress={cancelSelectionModal}
             >
-                <Text>Remove and go back</Text>
+                <Text>Remove all and go back</Text>
             </Button>
         </View>
         </Content>

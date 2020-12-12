@@ -20,8 +20,8 @@ export default function MessageScreen(props) {
 
     const [messageState, dispatch] = useContext(MessageContext)
     useEffect(() => {
-        console.log("MESSAGE STATE CHANGED");
-        console.log("MESSAGE STATE MESSAGES: ", messageState.messages);
+        // console.log("MESSAGE STATE CHANGED");
+        // console.log("MESSAGE STATE MESSAGES: ", messageState.messages);
     }, [messageState])
 
     useEffect(() => {
@@ -81,8 +81,10 @@ export default function MessageScreen(props) {
             var ranNum1 = Math.ceil(Math.random() * 100) * (Math.round(Math.random()) ? 1 : -1)
             var ranNum2 = Math.ceil(Math.random() * 100) * (Math.round(Math.random()) ? 1 : -1)
 
-            const newMessage = { content: [ranNum1, ranNum2] }
+            const newMessage = { body: [ranNum1, ranNum2] }
             console.log("NEW MESSAGE IN MESSAGE SCREEN", newMessage)
+
+            console.log("API", constants.createNewMessage(threadId))
 
             await fetchJson.POST(newMessage, constants.createNewMessage(threadId));
 

@@ -18,8 +18,8 @@ export default function NewMessageScreen (props) {
             //await fetchJson.POST(newMessage, constants.createNewMessage(messageId));
             //console.log("newMessage", newMessage)
             //console.log("MESSAGE ID", messageId)
-            console.log("New Message Send Handle");
-            console.log("newMessage", newMessage);
+            // console.log("New Message Send Handle");
+            // console.log("newMessage", newMessage);
 
 
         } catch (error) {

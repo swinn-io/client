@@ -9,7 +9,7 @@ import { CustomHeader } from '../components/common'
 
 export default function ContactSelect( props ) {
 
-    console.log("PROPS => ", props)
+    // console.log("PROPS => ", props)
     const [contacts, setContacts] = useState([]);
     
 
@@ -30,7 +30,7 @@ export default function ContactSelect( props ) {
     const handleNewContact = async (contact) => {
         try {
             // addSelectedUser([...users, contact])
-            console.log("SELECTED CONTACT => ", contact)
+            // console.log("SELECTED CONTACT => ", contact)
         } catch (error) {
             console.log("Handle New Contact - Error", error)
         }

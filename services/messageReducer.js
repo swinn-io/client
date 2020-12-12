@@ -23,7 +23,7 @@ const MessageReducer = (messageState, action) => {
                     };
                 }
                 else {
-                    console.log(`Thread with id ${action.action.message.thread_id} already existed`);
+                    // console.log(`Thread with id ${action.action.message.thread_id} already existed`);
                     return messageState;
                 }
             case 'SET_MESSAGES':
@@ -32,7 +32,7 @@ const MessageReducer = (messageState, action) => {
                     messages: action.payload
                 };
             case 'ADD_MESSAGES':
-                console.log("ADD_MESSAGES", action.action);
+                // console.log("ADD_MESSAGES", action.action);
                 const thd_id = action.action.message.thread_id;
                 const msg_id = action.action.message.id;
                 const msg_body = action.action.message.body;
@@ -46,7 +46,6 @@ const MessageReducer = (messageState, action) => {
                 if(thd_id in tempArray) {
                     
                     const foundMessage =  tempArray[thd_id].find(msg => msg.id === msg_id);
-                    console.log("FINALIZE");
                     if(!foundMessage) { tempArray[thd_id].unshift(newMessageToSave); }
                 }
                 return {

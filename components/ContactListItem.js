@@ -4,7 +4,6 @@ import {  ListItem, Thumbnail, Text, Left, Body, Right, Button, Icon } from 'nat
 
 export default function ContactListItem(contact) {
 
-    console.log("Contact => ", contact)
     return (
         <ListItem>
             {/* <Text>{contact}</Text> */}

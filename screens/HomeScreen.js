@@ -70,7 +70,7 @@ export default function HomeScreen (props) {
             })
 
             if(threads.length > 0){
-                dispatch({type: 'SET_THREADS', payload: msg});
+                await dispatch({type: 'SET_THREADS', payload: msg});
             }
             else {
                 setError("You don't have any messages yet");

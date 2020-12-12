@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Text, Content, Form, Item, 
   Input, Left, Right, Button, Icon, List,
-   ListItem, Thumbnail, Body, Footer, InputGroup, Picker, View}  from 'native-base';
+   ListItem, Thumbnail, Body, Footer, FooterTab, InputGroup, Picker, View}  from 'native-base';
 import { StyleSheet, Modal } from 'react-native'
 
 import constants from '../constants/constants';
@@ -14,7 +14,7 @@ import ContactList from '../components/ContactList';
 export default function NewThreadScreen (props) {
 
     const { threadTitle } = props.route.params
-    console.log("TITLE", threadTitle)
+    // console.log("TITLE", threadTitle)
     const [newThread, setNewThread] = useState({})
     const [pageError, setPageError] = useState()
     const [selectedUsers, setSelectedUsers] = useState([])
@@ -22,7 +22,7 @@ export default function NewThreadScreen (props) {
     const [names, setNames] = useState()
 
     useEffect(() => {
-      console.log("Selected Users Changed => ", selectedUsers)
+      // console.log("Selected Users Changed => ", selectedUsers)
       const names = selectedUsers.map((user) => {
         return user['name']
       })
@@ -105,23 +105,26 @@ export default function NewThreadScreen (props) {
               </Item>
             </Form>
             <Button
-                primary 
-                block
-                onPress={selectContacts}
-              >
-                <Text>Add Contacts</Text>
-                <Icon name='add' />
-            </Button>
-
-            <Button primary
-              block style={{width: '100%'}}
-              onPress={handleNewThread}
-            >
-              <Text>Send</Text>
-              <Icon name='send' />
-            </Button>
-      
+                  full
+                  onPress={selectContacts}
+                >
+                  <Text>Add/Remove Contacts</Text>
+                  <Icon name='add' />
+              </Button>
           </Content>
+          <Footer>
+            <FooterTab>
+              <Button
+                success
+                full
+                style={{width: '100%', color: '#fff'}}
+                onPress={handleNewThread}
+              >
+                <Text style={{color: "#fff"}}>Create</Text>
+                <Icon style={{color: "#fff"}}name='send' />
+              </Button>
+            </FooterTab>
+          </Footer>
         </Container>
       );
        
