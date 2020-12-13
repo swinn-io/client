@@ -68,7 +68,6 @@ export default function HomeScreen (props) {
                     subject: thread.attributes.subject
                 });
             })
-
             if(threads.length > 0){
                 await dispatch({type: 'SET_THREADS', payload: msg});
             }
@@ -76,8 +75,7 @@ export default function HomeScreen (props) {
                 setError("You don't have any messages yet");
             }
         } catch (error) {
-            console.log("HomeScreen GetMessages Error", error.message);
-            setError(error.message)
+            setError(error.message);
         }
     }
 
