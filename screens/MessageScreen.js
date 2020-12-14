@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import {
     Container, Text, Content, Form, Item, Input, Left, Right,
     Button, Icon, List, ListItem,
-    Thumbnail, Body, Footer, Fab
+    Thumbnail, Body, Footer, FooterTab, Fab
 } from 'native-base';
 import {StyleSheet} from 'react-native'
 
@@ -11,6 +11,8 @@ import fetchJson from '../services/fetchJson';
 import {CustomHeader} from '../components/common'
 
 import { MessageContext } from '../services/messageStore';
+
+import { LocationComponent } from '../components/input';
 
 export default function MessageScreen(props) {
 
@@ -124,48 +126,18 @@ export default function MessageScreen(props) {
                 renderRow={(message) => renderRow(message)}
             >
             </List>
-            {/* <Footer style={styles.bottom}>
-                <Item>
-                    <Input
-                        placeholder='Write a message'
-                        onChangeText={text => setNewMessage(text)}
-                        value={newMessage}
-                    />
-                    <Button
-                        onPress={handleNewMessage}
-                    >
-                        <Icon name='send' />
-                    </Button>
-                </Item>
-            </Footer> */}
-            <Fab
-                active={active}
-                direction="up"
-                containerStyle={{}}
-                style={{backgroundColor: '#5067FF'}}
-                position="bottomRight"
-                onPress={() => setActive(!active)}
-            >
-                <Icon name="add"/>
+            <Footer>
+                <FooterTab>
                 <Button style={{backgroundColor: '#F2786D'}}
                     onPress={handleNewMessage}
                 >
-                    <Icon name="cellular"/>
+                    <Icon style={{color: '#fff'}} name="cellular"/>
+                    <Text style={{color: '#fff'}}>Random Numbers</Text>
                 </Button>
-                <Button style={{backgroundColor: '#4B58A6'}}>
-                    <Icon name="compass"/>
-                </Button>
-            </Fab>
+                <LocationComponent threadId={threadId}/>
+                </FooterTab>
+            </Footer>
         </Container>
     );
 
 }
-
-
-const styles = StyleSheet.create({
-    bottom: {
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
-    }
-})
