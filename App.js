@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 // import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // import { createStackNavigator } from '@react-navigation/stack';
@@ -8,6 +8,8 @@ import { Icon, Container } from 'native-base';
 
 //Screen Imports
 import LoadingScreen from './screens/LoadingScreen';
+//import { AuthContext, MessageContext } from './services/context';
+
 import { AuthContext } from './services/context';
 
 //Stack Imports
@@ -19,6 +21,8 @@ import AuthStack from './stacks/AuthStack'
 
 import deviceStorage from './services/deviceStorage';
 
+import MessageStore from './services/messageStore';
+
 
 
 
@@ -26,10 +30,10 @@ import deviceStorage from './services/deviceStorage';
 
 export default App = () => {
 
-    const [isLoading, setIsLoading] = React.useState(true);
-    const [user, setUser] = React.useState({});
+    const [isLoading, setIsLoading] = useState(true);
+    const [user, setUser] = useState({});
 
-    const authContext = React.useMemo(() => ({
+    const authContext = useMemo(() => ({
         signIn: async ( user ) => {
           try {
             if( !isEmpty( user )){
@@ -51,6 +55,8 @@ export default App = () => {
         getUser: async () => {
           try {
             let user = await deviceStorage.getUser()
+            //When access_token is needed
+            //console.log("USER", user);
             return user;
           } catch (error) {
             console.log("GetUser Error", error);
@@ -70,7 +76,7 @@ export default App = () => {
         }
         setIsLoading(false);
       } catch (error) {
-        console.log("handleUser", error);
+        console.log("handleUser in APP.js", error);
       }
     }
 
@@ -99,13 +105,15 @@ if ( isLoading ){
 else {
   return (
     <AuthContext.Provider value={authContext}>
-      <NavigationContainer>
-      { user.access_token? 
-        <MenuStack/>
-      :
-        <AuthStack/>
-      }
-      </NavigationContainer>
+      <MessageStore>
+        <NavigationContainer>
+        { user.access_token? 
+          <MenuStack/>
+        :
+          <AuthStack/>
+        }
+        </NavigationContainer>
+      </MessageStore>
     </AuthContext.Provider>
 )
 }

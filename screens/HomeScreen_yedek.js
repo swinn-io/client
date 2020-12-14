@@ -7,36 +7,36 @@ import { CustomHeader } from '../components/common'
 import constants from '../constants/constants';
 import fetchJson from '../services/fetchJson';
 
-import { MessageContext } from '../services/messageStore';
+import { MessageContext } from '../services/context';
 
 export default function HomeScreen (props) {
 
+    const [messages, setMessages] = useState([]);
     const [error, setError] = useState(false)
-    const [messageState, dispatch] = useContext(MessageContext)
-    const [active, setActive] = useState(true)
+
+    //const messageContext = useContext(MessageContext);
+    //messageContext.getMessages = getMessages;
 
     useEffect(() => {
-        fetchMessages();
+        getMessages()
     }, [])
 
-    useEffect(() => {
-        console.log("MESSAGE STATE CHANGED");
-        console.log("MESSAGE STATE THREADS: ", messageState.threads);
-    }, [messageState])
-
     const refreshPage = () => {
+
         //If refresh is needed
-        fetchMessages()
+        setMessages([])
+        getMessages()
     }
 
-    const renderRow = (thread) => {
+    const renderRow = (message) => {
+
         return (
             <ListItem thumbnail
                 onPress={() => {
                     props.navigation.navigate("Message", {
-                        threadId: thread.thread_id,
-                        threadTitle: thread.subject,
-                        // onGoBack: refreshPage()
+                        messageId: message.id,
+                        messageTitle: message.subject,
+                        onGoBack: refreshPage()
                     });
                 }}
             >
@@ -44,8 +44,8 @@ export default function HomeScreen (props) {
                     <Thumbnail source={{ uri: 'https://www.pngitem.com/pimgs/m/581-5813504_avatar-dummy-png-transparent-png.png' }} />
                 </Left>
                 <Body>
-                    <Text>{thread.subject}</Text>
-                    <Text note numberOfLines={1}>{thread.thread_id}</Text>
+                    <Text>{message.subject}</Text>
+                    <Text note numberOfLines={1}>Chat text</Text>
                 </Body>
                 <Right>
                     <Button transparent>
@@ -56,50 +56,37 @@ export default function HomeScreen (props) {
         );
       }
 
-    const fetchMessages = async () => {
+    const getMessages = async () => {
         try {
             setError(false)
-            let response = await fetchJson.GET(constants.getAllMessages());
+            let messages = await fetchJson.GET(constants.getAllMessages());
             let msg = [];
-            let threads = response.data
+            let threads = messages.data;
             threads.forEach ((thread) => {
                 msg.push({
-                    thread_id: thread.id,
+                    id: thread.id,
                     subject: thread.attributes.subject
                 });
             })
             if(threads.length > 0){
-                await dispatch({type: 'SET_THREADS', payload: msg});
+                setMessages(msg);
             }
             else {
                 setError("You don't have any messages yet");
             }
         } catch (error) {
-            setError(error.message);
-        }
-    }
-
-    const createNewThread = async () => {
-        try {
-            setActive(!active)
-            setError(false)
-            props.navigation.navigate("NewThread", {
-                threadTitle: "Create new thread",
-            });
-        }
-        catch (error) {
-            console.log("Error Home Screen - Create New Thread", error);
+            // console.log("HomeScreen GetMessages Error", error.message);
+            setError(error.message)
         }
     }
 
     return (
         <Container>
             <CustomHeader props={props}/>
-            { messageState.threads.length >0?
-                <Container>
-                    <List
-                    dataArray={messageState.threads}
-                    keyExtractor={message => message.thread_id}
+            { messages.length>0?
+                <List
+                    dataArray={messages}
+                    keyExtractor={message => message.id}
                     renderRow={(message)=>renderRow(message)}
                     // refreshControl={
                     //     <RefreshControl
@@ -109,17 +96,6 @@ export default function HomeScreen (props) {
                     //     />}
                 >
                 </List>
-                    <Fab
-                    active={active}
-                    direction="up"
-                    containerStyle={{}}
-                    style={{backgroundColor: '#5067FF'}}
-                    position="bottomRight"
-                    onPress={() => createNewThread()}
-                >
-                    <Icon name="add"/>
-                </Fab>
-                </Container>
                 :
                 <Content contentContainerStyle={{
                     flex: 1,

@@ -1,8 +1,10 @@
 module.exports = {
 
     //Root
-    root: 'http://192.168.1.38',
-
+    root: 'https://swinn.io',
+    //Echo
+    echoServer: 'https://swinn.io',
+    echoServerPort: '6001',
     //Secret
     secret: 'secret',
 
@@ -11,9 +13,24 @@ module.exports = {
     tokenEndpoint(){return this.root + '/oauth/token'},
     revocationEndpoint(){return this.root + '/oauth/revoke'},
 
+    //User
+    contactUserEndpoint(){return this.root + '/api/user'},
+    profileEndpoint(){return this.root + '/api/user/me'},
+    userEndpoint(id){return `${this.root}/api/user/${id}`},
+
     //Message
-    getAllMessages(){return this.root + '/api/message'},
     getSingleMessage(id){return this.root + `/api/message/${id}`},
-    createNewMessage(id){return this.root + `/api/message/${id}`}
+    createNewMessage(id){return this.root + `/api/message/${id}`},
+
+
+    //Thread
+    getAllMessages(){return this.root + '/api/message'},
+    createNewThread(){return this.root + `/api/message`},
+
+    //Contacts
+    getAllContacts(){return this.root + `/api/contact`},
+    getSingleContact(){return this.root + `/api/contact/${id}`}
+
+
     
 }

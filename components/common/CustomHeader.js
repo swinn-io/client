@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container, Header, Left, Body, Right, Button, Title, Icon } from 'native-base';
+import EchoServer from "../EchoServer";
 
 
 function SetTitle(title) {
@@ -12,14 +13,14 @@ function SetTitle(title) {
   }
   return (
     <Body style={styles.headerBody}>
-      <Title>Ping Pong</Title>
+      <Title>Swinn</Title>
     </Body>
   );
 }
 
 const CustomHeader = (route) => {
 
-  const { isSub, messageTitle } = route
+  const { isSub, threadTitle } = route
    
    return (
     <Header noShadow >
@@ -36,7 +37,7 @@ const CustomHeader = (route) => {
                 try {
                   route.props.navigation.openDrawer()
                 } catch (error) {
-                  console.log(error.message)
+                  console.log("Custom Header Error" , error.message)
                 }
               }}
             >
@@ -44,8 +45,10 @@ const CustomHeader = (route) => {
             </Button>
           }
         </Left>
-        {SetTitle(messageTitle)}
-        <Right style={styles.headerRight}/>
+        {SetTitle(threadTitle)}
+        <Right style={styles.headerRight}>
+            <EchoServer user={route.user} />
+        </Right>
     </Header>
   );
 

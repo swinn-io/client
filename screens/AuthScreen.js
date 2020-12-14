@@ -19,12 +19,8 @@ export default function AuthScreen() {
 
     const [request, response, promptAsync] = useAuthRequest(
         {
-            clientId: '',
-            scopes: [],
-            redirectUri: makeRedirectUri({
-                native: 'exp://redirect',
-                useProxy: false
-            }),
+            scopes: ['*'],
+            redirectUri: makeRedirectUri(),
         },
         discovery
     );
@@ -54,54 +50,17 @@ export default function AuthScreen() {
         try {
             promptAsync()
             .then((res) => {
-                const grantType = "client_credentials";
-                const { id, secret, redirect } = res.params.callback.client;
-
-                return {
-                    grant_type: grantType,
-                    id,
-                    secret,
-                    redirect
-                }
-            })
-            .then(async (data) => {
                 try {
-                    if (data.secret){
-                        let resp = await fetch(discovery.tokenEndpoint, {
-                            method: 'POST',
-                            headers: {
-                                Accept: 'application/json',
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                grant_type: data.grant_type,
-                                client_id: data.id,
-                                client_secret: data.secret,
-                                redirect_uri: data.redirect
-                            }),
-                        });
-
-                        resp = await resp.json();
-                        const { token_type, expires_in, access_token } = resp;
-                        const { grant_type, id, secret, redirect } = data
-                        const User = {
-                            grant_type,
-                            client_id: id,
-                            client_secret: secret,
-                            redirect_uri: redirect,
-                            token_type,
-                            expires_in,
-                            access_token,
-                        }
-                        //console.log( User );
-                        signIn( User );
+                    let user = res.params;
+                    if (user.access_token){
+                        console.log('Logged in.');
+                        signIn( user );
                     }
                 }
                 catch (e) {
                     console.error(e);
                 }
             })
-            .catch((err) => console.log(err));
         } catch (error) {
             console.log("Handle Login Error", error);
         }

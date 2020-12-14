@@ -15,10 +15,11 @@
     "@react-navigation/stack": "^5.8.0",
     "expo": "~38.0.1",
     "expo-auth-session": "~1.4.0",
-    "expo-secure-store": "~9.0.1",
     "expo-font": "~8.2.1",
+    "expo-secure-store": "~9.0.1",
     "expo-status-bar": "^1.0.0",
     "expo-web-browser": "~8.3.1",
+    "laravel-echo": "^1.9.0",
     "native-base": "^2.13.13",
     "react": "~16.11.0",
     "react-dom": "~16.11.0",
@@ -30,7 +31,8 @@
     "react-native-web": "~0.11.7",
     "react-navigation": "^4.4.0",
     "react-navigation-stack": "^2.8.2",
-    "react-navigation-tabs": "^2.9.0"
+    "react-navigation-tabs": "^2.9.0",
+    "socket.io-client": "^2.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
