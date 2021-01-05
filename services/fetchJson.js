@@ -1,7 +1,7 @@
 import deviceStorage from './deviceStorage';
 
 const ThrowException = (error) => {
-
+  console.log("FETCH JSON ERROR", error)
   if(error === "Network request failed")
   {
     //throw new Error (`${503}`) // -- Service Unavailable
