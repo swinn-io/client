@@ -88,7 +88,15 @@ export default function MessageScreen(props) {
 
             console.log("API", constants.createNewMessage(threadId))
 
-            await fetchJson.POST(newMessage, constants.createNewMessage(threadId));
+            const data = await fetchJson.POST(newMessage, constants.createNewMessage(threadId));
+
+            try{
+                console.log("DATA TO SAVE => ", data.data)
+                await dispatch({ type: 'ADD_MESSAGES', data: data.data})
+            }
+            catch(err) {
+                console.log("ERROR => ", err)
+            }
 
         } catch (error) {
             console.log("Message Retrieve Error:", error)

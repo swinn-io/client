@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Container, Text, Content, Form, Item, 
   Input, Left, Right, Button, Icon, List,
    ListItem, Thumbnail, Body, Footer, FooterTab, InputGroup, Picker, View}  from 'native-base';
@@ -8,6 +8,9 @@ import constants from '../constants/constants';
 import fetchJson from '../services/fetchJson';
 import { CustomHeader } from '../components/common'
 import ContactList from '../components/ContactList';
+
+
+import { MessageContext } from '../services/messageStore';
 
 
 
@@ -37,6 +40,8 @@ export default function NewThreadScreen (props) {
             return user['id']
           });
           const response = await fetchJson.POST(newThread, constants.createNewThread());
+          console.log("THREAD STRUCTURE RESPONSE.DATA", response.data)
+          await dispatch({ type: 'ADD_THREAD', data: response.data})
           setNewThread({});
           props.navigation.goBack()
 
@@ -65,6 +70,8 @@ export default function NewThreadScreen (props) {
     const closeModal = () => {
       setModalVisibility(false) 
     }
+
+    const [messageState, dispatch] = useContext(MessageContext)
 
     return (
         <Container>

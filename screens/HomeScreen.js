@@ -20,7 +20,7 @@ export default function HomeScreen (props) {
     }, [])
 
     useEffect(() => {
-        console.log("MESSAGE STATE CHANGED");
+        // console.log("MESSAGE STATE CHANGED");
         console.log("MESSAGE STATE THREADS: ", messageState.threads);
     }, [messageState])
 
@@ -95,7 +95,7 @@ export default function HomeScreen (props) {
     return (
         <Container>
             <CustomHeader props={props}/>
-            { messageState.threads.length >0?
+            {messageState.threads.length >0 ?
                 <Container>
                     <List
                     dataArray={messageState.threads}
