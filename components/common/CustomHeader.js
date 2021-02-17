@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Container, Header, Left, Body, Right, Button, Title, Icon } from 'native-base';
 import socketService from '../../services/socketService';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 const ICONS = {
@@ -28,7 +29,7 @@ function SetTitle(title) {
   );
 }
 
-function SetConnectionStatus(status){
+function SetConnectionIcon(status){
   
   let statusSym;
   if(status){
@@ -51,6 +52,11 @@ const CustomHeader = (route) => {
 
   const { isSub, threadTitle } = route
   let [connectionStatus, setConnectionStatus] = useState(false);
+
+  useFocusEffect(() => {
+    const status = socketService.GetConnectionStatus() ? true : false;
+    setConnectionStatus(status);
+  }, []);
 
    return (
     <Header noShadow >
@@ -77,7 +83,7 @@ const CustomHeader = (route) => {
         </Left>
         {SetTitle(threadTitle)}
         <Right style={styles.headerRight}>
-            { SetConnectionStatus(socketService.GetConnectionStatus()) }
+            { SetConnectionIcon(connectionStatus) }
         </Right>
     </Header>
   );

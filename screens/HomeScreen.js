@@ -14,6 +14,7 @@ export default function HomeScreen (props) {
     const [error, setError] = useState(false)
     const [messageState, dispatch] = useContext(MessageContext)
     const [active, setActive] = useState(true)
+    const [test, setTest] = useState()
 
     useEffect(() => {
         fetchMessages();
@@ -94,7 +95,7 @@ export default function HomeScreen (props) {
 
     return (
         <Container>
-            <CustomHeader props={props}/>
+            <CustomHeader props={props} onWillFocus={() => setTest({})}/> 
             { messageState.threads.length >0?
                 <Container>
                     <List
