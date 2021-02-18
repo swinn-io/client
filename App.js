@@ -22,6 +22,9 @@ import AuthStack from './stacks/AuthStack'
 import deviceStorage from './services/deviceStorage';
 
 import MessageStore from './services/messageStore';
+import { Socket } from 'socket.io-client';
+
+import SocketService from './services/socketService';
 
 
 
@@ -32,6 +35,7 @@ export default App = () => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState({});
+    // const [socket, setSocket] = useState(null);
 
     const authContext = useMemo(() => ({
         signIn: async ( user ) => {
@@ -73,6 +77,7 @@ export default App = () => {
         const user = await deviceStorage.getUser();
         if ( user ) {
           setUser(user);
+          SocketService.SetConnection(user);
         }
         setIsLoading(false);
       } catch (error) {

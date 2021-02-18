@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Container, Header, Left, Body, Right, Button, Title, Icon } from 'native-base';
-import EchoServer from "../EchoServer";
+import socketService from '../../services/socketService';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { useFocusEffect } from '@react-navigation/native';
 
+
+const ICONS = {
+  online: 'satellite-dish',
+  offline: 'plug'
+}
+const COLORS = {
+  online: 'green',
+  offline: 'red'
+}
 
 function SetTitle(title) {
   if(title){
@@ -18,10 +29,35 @@ function SetTitle(title) {
   );
 }
 
+function SetConnectionIcon(status){
+  
+  let statusSym;
+  if(status){
+    statusSym = {
+      icon: ICONS.online,
+      color: COLORS.online
+    }
+  }
+  else {
+    statusSym = {
+      icon: ICONS.offline,
+      color: COLORS.offline
+    }
+  }
+  
+  return <FontAwesome5 name={statusSym.icon} style={{fontSize:20, color: statusSym.color}} />
+}
+
 const CustomHeader = (route) => {
 
   const { isSub, threadTitle } = route
-   
+  let [connectionStatus, setConnectionStatus] = useState(false);
+
+  useFocusEffect(() => {
+    const status = socketService.GetConnectionStatus() ? true : false;
+    setConnectionStatus(status);
+  }, []);
+
    return (
     <Header noShadow >
         <Left style={styles.headerLeft}>
@@ -47,7 +83,7 @@ const CustomHeader = (route) => {
         </Left>
         {SetTitle(threadTitle)}
         <Right style={styles.headerRight}>
-            <EchoServer user={route.user} />
+            { SetConnectionIcon(connectionStatus) }
         </Right>
     </Header>
   );
