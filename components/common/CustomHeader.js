@@ -1,28 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Container, Header, Left, Body, Right, Button, Title, Icon } from 'native-base';
-import EchoServer from "../EchoServer";
-
-
-function SetTitle(title) {
-  if(title){
-    return (
-      <Body style={styles.headerBody}>
-        <Title>{title}</Title>
-      </Body>
-    )
-  }
-  return (
-    <Body style={styles.headerBody}>
-      <Title>Swinn</Title>
-    </Body>
-  );
-}
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { EchoContext } from '../../services/store/echoStore';
 
 const CustomHeader = (route) => {
 
   const { isSub, threadTitle } = route
-   
-   return (
+
+  const [headerTitle] = useState(threadTitle ? threadTitle : "Swinn");
+  const [echoState] = useContext(EchoContext);
+
+  return (
     <Header noShadow >
         <Left style={styles.headerLeft}>
           {isSub? 
@@ -45,9 +33,17 @@ const CustomHeader = (route) => {
             </Button>
           }
         </Left>
-        {SetTitle(threadTitle)}
+        <Body style={styles.headerBody}>
+          <Title>{headerTitle}</Title>
+        </Body>
         <Right style={styles.headerRight}>
-            <EchoServer user={route.user} />
+          <Button transparent>
+              {/* <FontAwesome5 name={echoState.connector.socket.connected ? 'satellite-dish' : 'plug'} style={{ */}
+              <FontAwesome5 name={'circle'} solid style={{
+                  fontSize:20, 
+                  color: echoState.connector.socket.connected ? 'green' : 'red'
+              }} />
+          </Button>
         </Right>
     </Header>
   );

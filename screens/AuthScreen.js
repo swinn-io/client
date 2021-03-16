@@ -1,11 +1,12 @@
 import {StatusBar} from 'expo-status-bar';
-import React, { Component } from 'react';
+import React, { Component, useContext, useEffect } from 'react';
 import * as WebBrowser from 'expo-web-browser';
 import {makeRedirectUri, useAuthRequest} from 'expo-auth-session';
 import { Container, Header, Content, Button, Text } from 'native-base';
 import constants from '../constants/constants';
 
-import { AuthContext } from '../services/context';
+import { AuthContext } from '../services/store/authStore';
+import { SignIn } from '../services/userService';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -25,9 +26,10 @@ export default function AuthScreen() {
         discovery
     );
 
-    const { signIn } = React.useContext(AuthContext);
+    const auth_context = useContext(AuthContext);
+    const setUser = auth_context[1];
 
-    React.useEffect(() => {
+    useEffect(() => {
         try {
             if(response !== null) {
                 if (response?.type === 'success') {
@@ -54,7 +56,8 @@ export default function AuthScreen() {
                     let user = res.params;
                     if (user.access_token){
                         console.log('Logged in.');
-                        signIn( user );
+                        SignIn( user );
+                        setUser(user);
                     }
                 }
                 catch (e) {

@@ -1,5 +1,5 @@
 import React, {createContext, useReducer} from "react";
-import MessageReducer from './messageReducer'
+import MessageReducer from '../reducers/messageReducer'
 
 const initialState = {
     threads: [],

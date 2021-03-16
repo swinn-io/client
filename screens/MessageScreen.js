@@ -10,7 +10,7 @@ import constants from '../constants/constants';
 import fetchJson from '../services/fetchJson';
 import {CustomHeader} from '../components/common'
 
-import { MessageContext } from '../services/messageStore';
+import { MessageContext } from '../services/store/messageStore';
 
 import { LocationComponent } from '../components/input';
 
@@ -54,7 +54,7 @@ export default function MessageScreen(props) {
             let messages = [];
             threadMessages.forEach ((msg) => {
 
-                console.log("msg", msg)
+                // console.log("msg", msg)
                 messages.push({
                     id: msg.id,
                     body: msg.attributes.body,
@@ -92,7 +92,7 @@ export default function MessageScreen(props) {
 
             try{
                 console.log("DATA TO SAVE => ", data.data)
-                await dispatch({ type: 'ADD_MESSAGES', data: data.data})
+                // await dispatch({ type: 'ADD_MESSAGES', data: data.data})
             }
             catch(err) {
                 console.log("ERROR => ", err)

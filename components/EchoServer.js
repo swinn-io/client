@@ -1,13 +1,12 @@
 import React, { useEffect, useContext } from 'react';
-import Echo from 'laravel-echo';
-import socketio from 'socket.io-client';
-import constants from '../constants/constants';
 import {Button} from "native-base";
-// import { AuthContext, MessageContext } from '../services/context';
-import { AuthContext } from '../services/context';
+import { AuthContext } from '../services/authStore';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import { MessageContext } from '../services/messageStore';
+
+import { GetEcho } from '../services/socketService';
+
 const ICONS = {
     online: 'satellite-dish',
     offline: 'plug'
@@ -29,14 +28,18 @@ export default function EchoServer(props){
         status: 1,
         icon: ICONS.offline,
         color: COLORS.offline,
+        echo: null,
+        channel: null
     });
 
     const handleUser = async () => {
         try {
             if(!state.user){
                 await getUser().then(user => {
-                    setState({ user: user });
-                    listenUserChannel(user);
+                    setState({
+                        ...state,
+                        user: user
+                     });
                 }).catch(error => console.log(error));
             }
         } catch (e) {
@@ -44,86 +47,95 @@ export default function EchoServer(props){
         }
     }
 
+    const handleEcho = async () => {
+        try {
+            const echo = GetEcho(state.user)
+
+            const channel = `App.Models.User.${state.user.user.id}`;
+            
+            setState({
+                ...state,
+                echo: echo,
+                channel: channel,
+                icon: ICONS.online,
+                color: COLORS.online
+            })
+
+            state.echo
+                .private(channel)
+                .notification((notification) => {
+                    handleNewMessage(notification);
+                });
+
+            console.log('Join "online" channel');
+
+            
+            // state.echo.connector.socket.on('connect', function(){
+            //     console.log('Socket connected to: ', state.echo.socketId());
+            // });
+
+            // state.echo.connector.socket.on('disconnect', function(reason){
+            //     console.log("Disconnection reason", reason);
+            //     if (reason === 'io server disconnect') {
+            //         // the disconnection was initiated by the server, you need to reconnect manually
+            //         state.echo.connector.socket.connect();
+            //     }
+            //     // else the socket will automatically try to reconnect
+            //     console.log('Socket disconnected');
+            // });
+
+            
+
+        } catch (error) {
+            console.log(`Echo Server Handle Echo Error: ${error.message}`)
+        }
+    }
+
+
     const handleNewMessage = async (notification) => {
         try {
             const notification_type = notification.type;
-            console.log("NOTIFICATION STRUCTURE Notification Updated => ", notification);
-
-
+            console.log("-----NEW NOTIFICATION-----", notification);
             if (notification_type.includes("MessageCreated")) {
-                // console.log("NOTIFICATION STRUCTURE Notification=> ", notification);
-                // console.log("NOTIFICATION STRUCTURE Notification.data=> ", notification.data);
-                await dispatch({ type: 'ADD_THREAD', data: notification})
-                await dispatch({ type: 'ADD_MESSAGES', data: notification})
+                // await dispatch({ type: 'ADD_MESSAGES', action: notification})
+            }
+            else if (notification_type.includes("Thread")){
+                await dispatch({ type: 'ADD_THREAD', action: notification})
             }
         } catch (e) {
            console.log("Error", e);
         }
     }
 
-
     useEffect(() => {
         handleUser();
-        //handleMessages();
-      }, []);
+    }, []);
 
-    // const checkConnection = () => {
-    //     setState({
-    //         //isConnected: this.echo ? this.echo.connector.socket.connected : false
-    //     });
-    // }
+    useEffect(() => {
 
-    const listenUserChannel = (params) => {
-        try{
-            const channel = `App.Models.User.${params.user.id}`;
+        console.log("USE EFFECT CALLED");
+        handleEcho();
 
-            let echo = new Echo({
-                broadcaster: 'socket.io',
-                client: socketio,
-                authEndpoint: constants.echoServer +  '/broadcasting/auth',
-                host: constants.echoServer + ':' + constants.echoServerPort,
-                auth: {
-                    headers: {
-                        Accept: "application/json",
-                        Authorization: `Bearer ${params.access_token}`,
-                    }
-                },
-            });
+        if(state.user && state.echo){
+            return () => {
+                state.echo.leave(state.channel);
+                console.log("Leaving channel:", state.channel)
 
-            echo
-                .private(channel)
-                .notification((notification) => {
+                // state.echo.connector.socket.off('connect');
+                // state.echo.connector.socket.off('disconnect');
 
-                    handleNewMessage(notification);
-                    // console.log(`Notification ${notification.type} =>`, notification);
-                });
-
-            console.log('Join "online" channel');
-            echo.join('online')
-                .here(users => {
-                    if(users.find(data => data.id === params.user.id)) {
-                        setState({
-                            icon: ICONS.online,
-                            color: COLORS.online
-                        });
-                    }
-                });
-
-            echo.connector.socket.on('subscription_error', (channel, data) => {
-                console.log('channel subscription error: ' + channel, data);
-            });
-        } catch (e) {
-            console.log(e)
+                // console.log("Socket unsubscribed from connect and disconnect events");
+            }
         }
-    }
+     }, [state.user, state.echo]);
+
 
     return (
         <Button transparent>
-            <FontAwesome5 name={state.icon} style={{fontSize:20, color: state.color}} />
+            <FontAwesome5 name={state.icon} style={{
+                fontSize:20, 
+                color: state.color
+            }} />
         </Button>
       );
 }
-
-//EchoServer.contextType = MessageContext;
-
-//export default EchoServer;

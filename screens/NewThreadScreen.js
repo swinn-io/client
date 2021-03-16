@@ -10,7 +10,7 @@ import { CustomHeader } from '../components/common'
 import ContactList from '../components/ContactList';
 
 
-import { MessageContext } from '../services/messageStore';
+import { MessageContext } from '../services/store/messageStore';
 
 
 
@@ -35,14 +35,20 @@ export default function NewThreadScreen (props) {
     const handleNewThread = async () => {
         try {
           //Convert content to array
+          
           newThread.content = [newThread.content];
+          
           newThread.recipients = selectedUsers.map((user) => {
             return user['id']
           });
+          
           const response = await fetchJson.POST(newThread, constants.createNewThread());
+          
           console.log("THREAD STRUCTURE RESPONSE.DATA", response.data)
+          
           await dispatch({ type: 'ADD_THREAD', data: response.data})
           setNewThread({});
+          
           props.navigation.goBack()
 
 
@@ -58,7 +64,7 @@ export default function NewThreadScreen (props) {
 
       setNewThread({
         ...newThread,
-        [name]: text
+        [name]: text.toString()
       })
 
     }
@@ -83,7 +89,11 @@ export default function NewThreadScreen (props) {
                   placeholder="Subject" 
                   name="subject"
                   onChangeText={(text) => handleTextChange(text, "subject")}
-                  value={newThread["subject"]}
+                  value={
+                    console.log("typeof subject: ", typeof(newThread["subject"])),
+                    console.log(" subject: ", newThread["subject"]),
+                    newThread["subject"]
+                  }
                   />
               </Item>
               <Item>
@@ -91,7 +101,10 @@ export default function NewThreadScreen (props) {
                   placeholder="Content" 
                   name="content"
                   onChangeText={(text) => handleTextChange(text, "content")}
-                  value={newThread["content"]}
+                  value={
+                    console.log("typeof content: ", typeof(newThread["content"])),
+                    console.log(" content: ", newThread["content"]),
+                    newThread["content"]}
                 />
               </Item>
               <Item picker>
@@ -107,7 +120,7 @@ export default function NewThreadScreen (props) {
               </Item>
               <Item>
                 <Text>{
-                  (names) ? `Selected users: ${names}` : ''
+                  (names) ? `Selected users: ${names} AND TYPE OF ${typeof(names)}` : ''
                 }</Text>
               </Item>
             </Form>

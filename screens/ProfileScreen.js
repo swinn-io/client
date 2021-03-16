@@ -1,16 +1,21 @@
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 import { Container, Header, Content, Button, ListItem, Text, Icon, Left, Body, Right, Switch } from 'native-base';
 
-import { AuthContext } from '../services/context';
 import { CustomHeader } from '../components/common'
+import { SignOut } from '../services/userService';
+import { AuthContext } from '../services/store/authStore';
 
 export default function ProfileScreen(props){
 
-    const { signOut } = React.useContext(AuthContext);
+    const auth_context = useContext(AuthContext);
+    const setUser = auth_context[1];
 
     const handleLogout = async () => {
         //SignOut comes from App.js Context
-        signOut();
+        SignOut();
+        setUser({
+          access_token: null
+        })
     }
 
     return (

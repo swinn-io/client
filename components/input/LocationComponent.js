@@ -5,7 +5,7 @@ import * as Location from 'expo-location';
 import constants from '../../constants/constants';
 import fetchJson from '../../services/fetchJson';
 
-import { MessageContext } from '../../services/messageStore';
+import { MessageContext } from '../../services/store/messageStore';
 
 let sendLocation = async (props, dispatch) => {
     const hasLocationServicesEnabled = await Location.hasServicesEnabledAsync();
@@ -32,15 +32,11 @@ let sendLocation = async (props, dispatch) => {
         
 
         try{
-            // console.log("DATA TO SAVE => ", data.data)
-            await dispatch({ type: 'ADD_MESSAGES', data: data.data})
+            // await dispatch({ type: 'ADD_MESSAGES', data: data.data})
         }
         catch(err) {
             console.log("ERROR => ", err)
         }
-        
-        // await dispatch({ type: 'ADD_MESSAGES', action: data})
-        // console.log("MESSAGE DISPATCHED");
         
     }
     catch (error) {
