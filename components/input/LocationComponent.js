@@ -28,14 +28,13 @@ let sendLocation = async (props, dispatch) => {
         const newMessage = { body: [location] }
         
         const data = await fetchJson.POST(newMessage, constants.createNewMessage(props.threadId))
-        // console.log("DATA => ", data)
         
 
         try{
-            // await dispatch({ type: 'ADD_MESSAGES', data: data.data})
+            await dispatch({ type: 'ADD_MESSAGES', data: data.data})
         }
         catch(err) {
-            console.log("ERROR => ", err)
+            console.log("LOCATION COMPONENT ERROR => ", err)
         }
         
     }

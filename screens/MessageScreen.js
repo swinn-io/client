@@ -84,15 +84,11 @@ export default function MessageScreen(props) {
             var ranNum2 = Math.ceil(Math.random() * 100) * (Math.round(Math.random()) ? 1 : -1)
 
             const newMessage = { body: [ranNum1, ranNum2] }
-            console.log("NEW MESSAGE IN MESSAGE SCREEN", newMessage)
-
-            console.log("API", constants.createNewMessage(threadId))
 
             const data = await fetchJson.POST(newMessage, constants.createNewMessage(threadId));
 
             try{
-                console.log("DATA TO SAVE => ", data.data)
-                // await dispatch({ type: 'ADD_MESSAGES', data: data.data})
+                await dispatch({ type: 'ADD_MESSAGES', data: data.data})
             }
             catch(err) {
                 console.log("ERROR => ", err)

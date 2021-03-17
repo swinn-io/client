@@ -22,7 +22,9 @@ export default function NewThreadScreen (props) {
     const [pageError, setPageError] = useState()
     const [selectedUsers, setSelectedUsers] = useState([])
     const [modalVisibility, setModalVisibility] = useState(false)
-    const [names, setNames] = useState()
+    const [names, setNames] = useState([])
+
+    const [messageState, dispatch] = useContext(MessageContext)
 
     useEffect(() => {
       // console.log("Selected Users Changed => ", selectedUsers)
@@ -34,18 +36,16 @@ export default function NewThreadScreen (props) {
 
     const handleNewThread = async () => {
         try {
-          //Convert content to array
+          const messageToSend = {
+            subject: newThread.subject,
+            content: [newThread.content],
+            recipients: newThread.recipients = selectedUsers.map((user) => {
+              return user['id']
+            })
+          }
           
-          newThread.content = [newThread.content];
-          
-          newThread.recipients = selectedUsers.map((user) => {
-            return user['id']
-          });
-          
-          const response = await fetchJson.POST(newThread, constants.createNewThread());
-          
-          console.log("THREAD STRUCTURE RESPONSE.DATA", response.data)
-          
+          const response = await fetchJson.POST(messageToSend, constants.createNewThread());
+
           await dispatch({ type: 'ADD_THREAD', data: response.data})
           setNewThread({});
           
@@ -77,7 +77,6 @@ export default function NewThreadScreen (props) {
       setModalVisibility(false) 
     }
 
-    const [messageState, dispatch] = useContext(MessageContext)
 
     return (
         <Container>
@@ -89,11 +88,7 @@ export default function NewThreadScreen (props) {
                   placeholder="Subject" 
                   name="subject"
                   onChangeText={(text) => handleTextChange(text, "subject")}
-                  value={
-                    console.log("typeof subject: ", typeof(newThread["subject"])),
-                    console.log(" subject: ", newThread["subject"]),
-                    newThread["subject"]
-                  }
+                  value={newThread["subject"]}
                   />
               </Item>
               <Item>
@@ -101,10 +96,7 @@ export default function NewThreadScreen (props) {
                   placeholder="Content" 
                   name="content"
                   onChangeText={(text) => handleTextChange(text, "content")}
-                  value={
-                    console.log("typeof content: ", typeof(newThread["content"])),
-                    console.log(" content: ", newThread["content"]),
-                    newThread["content"]}
+                  value={newThread["content"]}
                 />
               </Item>
               <Item picker>
@@ -115,12 +107,11 @@ export default function NewThreadScreen (props) {
                   onRequestClose={() => { setModalVisibility(false) }}
                 >
                   <ContactList users={selectedUsers} setSelectedUser={setSelectedUsers} closeModal={closeModal} />
-                  
                 </Modal>
               </Item>
               <Item>
                 <Text>{
-                  (names) ? `Selected users: ${names} AND TYPE OF ${typeof(names)}` : ''
+                  (names) ? `Selected users: ${names}` : ''
                 }</Text>
               </Item>
             </Form>

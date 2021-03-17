@@ -56,10 +56,10 @@ export default function HomeScreen (props) {
             const notification_type = notification.type;
             console.log("-----NEW NOTIFICATION-----", notification);
             if (notification_type.includes("MessageCreated")) {
-                // await dispatch({ type: 'ADD_MESSAGES', action: notification.payload})
+                await dispatch({ type: 'ADD_MESSAGES', data: notification.payload})
             }
-            else if (notification_type.includes("Thread")){
-                // await dispatch({ type: 'ADD_THREAD', action: notification})
+            else if (notification_type.includes("ThreadCreated")){
+                await dispatch({ type: 'ADD_THREAD', data: notification.payload})
             }
         } catch (e) {
            console.log("Error", e);
