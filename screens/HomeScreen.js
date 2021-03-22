@@ -7,27 +7,63 @@ import { CustomHeader } from '../components/common'
 import constants from '../constants/constants';
 import fetchJson from '../services/fetchJson';
 
-import { MessageContext } from '../services/messageStore';
+import { MessageContext } from '../services/store/messageStore';
+import { EchoContext } from '../services/store/echoStore';
+import { AuthContext } from '../services/store/authStore';
+
+import { isEmpty } from '../services/helperFunctions';
 
 export default function HomeScreen (props) {
 
     const [error, setError] = useState(false)
     const [messageState, dispatch] = useContext(MessageContext)
+    const [userState] = useContext(AuthContext);
+    const [echoState] = useContext(EchoContext);
+
     const [active, setActive] = useState(true)
-    const [test, setTest] = useState()
 
     useEffect(() => {
         fetchMessages();
     }, [])
 
     useEffect(() => {
-        console.log("MESSAGE STATE CHANGED");
-        console.log("MESSAGE STATE THREADS: ", messageState.threads);
+        // console.log("MESSAGE STATE THREADS: ", messageState.threads);
     }, [messageState])
+
+    useEffect(() => {
+        const channel = `App.Models.User.${userState.user.id}`;
+        echoState
+            .private(channel)
+            .notification((notification) => {
+                handleNewMessage(notification);
+            });
+
+        console.log('Join "online" channel');
+
+        return () => {
+            echoState.leave(channel);
+            console.log("Leaving channel:", channel)
+        }
+    }, [])
 
     const refreshPage = () => {
         //If refresh is needed
         fetchMessages()
+    }
+
+    const handleNewMessage = async (notification) => {
+        try {
+            const notification_type = notification.type;
+            console.log("-----NEW NOTIFICATION-----", notification);
+            if (notification_type.includes("MessageCreated")) {
+                await dispatch({ type: 'ADD_MESSAGES', data: notification.payload})
+            }
+            else if (notification_type.includes("ThreadCreated")){
+                await dispatch({ type: 'ADD_THREAD', data: notification.payload})
+            }
+        } catch (e) {
+           console.log("Error", e);
+        }
     }
 
     const renderRow = (thread) => {
@@ -66,7 +102,8 @@ export default function HomeScreen (props) {
             threads.forEach ((thread) => {
                 msg.push({
                     thread_id: thread.id,
-                    subject: thread.attributes.subject
+                    subject: thread.attributes.subject,
+                    thread_attributes: thread.attributes
                 });
             })
             if(threads.length > 0){
@@ -76,6 +113,7 @@ export default function HomeScreen (props) {
                 setError("You don't have any messages yet");
             }
         } catch (error) {
+            console.log("Custom Warning - Home Screen:", error.message)
             setError(error.message);
         }
     }
@@ -95,8 +133,8 @@ export default function HomeScreen (props) {
 
     return (
         <Container>
-            <CustomHeader props={props} onWillFocus={() => setTest({})}/> 
-            { messageState.threads.length >0?
+            <CustomHeader props={props}/>
+            {messageState.threads.length >0 ?
                 <Container>
                     <List
                     dataArray={messageState.threads}

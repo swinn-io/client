@@ -1,64 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Container, Header, Left, Body, Right, Button, Title, Icon } from 'native-base';
-import socketService from '../../services/socketService';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { useFocusEffect } from '@react-navigation/native';
-
-
-const ICONS = {
-  online: 'satellite-dish',
-  offline: 'plug'
-}
-const COLORS = {
-  online: 'green',
-  offline: 'red'
-}
-
-function SetTitle(title) {
-  if(title){
-    return (
-      <Body style={styles.headerBody}>
-        <Title>{title}</Title>
-      </Body>
-    )
-  }
-  return (
-    <Body style={styles.headerBody}>
-      <Title>Swinn</Title>
-    </Body>
-  );
-}
-
-function SetConnectionIcon(status){
-  
-  let statusSym;
-  if(status){
-    statusSym = {
-      icon: ICONS.online,
-      color: COLORS.online
-    }
-  }
-  else {
-    statusSym = {
-      icon: ICONS.offline,
-      color: COLORS.offline
-    }
-  }
-  
-  return <FontAwesome5 name={statusSym.icon} style={{fontSize:20, color: statusSym.color}} />
-}
+import { EchoContext } from '../../services/store/echoStore';
 
 const CustomHeader = (route) => {
 
   const { isSub, threadTitle } = route
-  let [connectionStatus, setConnectionStatus] = useState(false);
 
-  useFocusEffect(() => {
-    const status = socketService.GetConnectionStatus() ? true : false;
-    setConnectionStatus(status);
-  }, []);
+  const [headerTitle] = useState(threadTitle ? threadTitle : "Swinn");
+  const [echoState] = useContext(EchoContext);
 
-   return (
+  return (
     <Header noShadow >
         <Left style={styles.headerLeft}>
           {isSub? 
@@ -81,9 +33,17 @@ const CustomHeader = (route) => {
             </Button>
           }
         </Left>
-        {SetTitle(threadTitle)}
+        <Body style={styles.headerBody}>
+          <Title>{headerTitle}</Title>
+        </Body>
         <Right style={styles.headerRight}>
-            { SetConnectionIcon(connectionStatus) }
+          <Button transparent>
+              {/* <FontAwesome5 name={echoState.connector.socket.connected ? 'satellite-dish' : 'plug'} style={{ */}
+              <FontAwesome5 name={'circle'} solid style={{
+                  fontSize:20, 
+                  color: echoState.connector.socket.connected ? 'green' : 'red'
+              }} />
+          </Button>
         </Right>
     </Header>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Container, Text, Content, Form, Item, 
   Input, Left, Right, Button, Icon, List,
    ListItem, Thumbnail, Body, Footer, FooterTab, InputGroup, Picker, View}  from 'native-base';
@@ -10,6 +10,9 @@ import { CustomHeader } from '../components/common'
 import ContactList from '../components/ContactList';
 
 
+import { MessageContext } from '../services/store/messageStore';
+
+
 
 export default function NewThreadScreen (props) {
 
@@ -19,7 +22,9 @@ export default function NewThreadScreen (props) {
     const [pageError, setPageError] = useState()
     const [selectedUsers, setSelectedUsers] = useState([])
     const [modalVisibility, setModalVisibility] = useState(false)
-    const [names, setNames] = useState()
+    const [names, setNames] = useState([])
+
+    const [messageState, dispatch] = useContext(MessageContext)
 
     useEffect(() => {
       // console.log("Selected Users Changed => ", selectedUsers)
@@ -31,13 +36,19 @@ export default function NewThreadScreen (props) {
 
     const handleNewThread = async () => {
         try {
-          //Convert content to array
-          newThread.content = [newThread.content];
-          newThread.recipients = selectedUsers.map((user) => {
-            return user['id']
-          });
-          const response = await fetchJson.POST(newThread, constants.createNewThread());
+          const messageToSend = {
+            subject: newThread.subject,
+            content: [newThread.content],
+            recipients: newThread.recipients = selectedUsers.map((user) => {
+              return user['id']
+            })
+          }
+          
+          const response = await fetchJson.POST(messageToSend, constants.createNewThread());
+
+          await dispatch({ type: 'ADD_THREAD', data: response.data})
           setNewThread({});
+          
           props.navigation.goBack()
 
 
@@ -53,7 +64,7 @@ export default function NewThreadScreen (props) {
 
       setNewThread({
         ...newThread,
-        [name]: text
+        [name]: text.toString()
       })
 
     }
@@ -65,6 +76,7 @@ export default function NewThreadScreen (props) {
     const closeModal = () => {
       setModalVisibility(false) 
     }
+
 
     return (
         <Container>
@@ -95,7 +107,6 @@ export default function NewThreadScreen (props) {
                   onRequestClose={() => { setModalVisibility(false) }}
                 >
                   <ContactList users={selectedUsers} setSelectedUser={setSelectedUsers} closeModal={closeModal} />
-                  
                 </Modal>
               </Item>
               <Item>

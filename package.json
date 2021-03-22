@@ -15,6 +15,7 @@
     "@react-navigation/stack": "^5.8.0",
     "expo": "~38.0.1",
     "expo-auth-session": "~1.4.0",
+    "expo-barcode-scanner": "~8.2.1",
     "expo-font": "~8.2.1",
     "expo-secure-store": "~9.0.1",
     "expo-status-bar": "^1.0.0",

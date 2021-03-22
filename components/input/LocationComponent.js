@@ -1,43 +1,19 @@
-import * as React from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Button, Icon, Text } from 'native-base';
 import * as Location from 'expo-location';
 
 import constants from '../../constants/constants';
 import fetchJson from '../../services/fetchJson';
 
-const sendLocationBAK = async () => {
+import { MessageContext } from '../../services/store/messageStore';
 
-    try {
-        const isLocationServicesEnabled = await Location.hasServicesEnabledAsync();
-        if (isLocationServicesEnabled) {
-            let { status } = await Location.requestPermissionsAsync();
-            if (status !== 'granted') {
-                // setErrorMsg('Permission to access location was denied');
-                alert('Permission to access location was denied')
-                return;
-            }
-            else {
-                let location = await Location.getCurrentPositionAsync({});
-                const newMessage = { body: [location] }
-                console.log("PROPS", threadId);
-                // await fetchJson.POST(newMessage, constants.createNewMessage(threadId));
-            }
-        }
-        else {
-            //Location.requestPermissionsAsync()
-            alert("I'm in else")
-            //Ask user to enable location services
-        }
-
-    } catch (error) {
-        console.log("Location Component Error:", error)
-    }
-}
-
-const sendLocation = async (props) => {
+let sendLocation = async (props, dispatch) => {
     const hasLocationServicesEnabled = await Location.hasServicesEnabledAsync();
+
     if (!hasLocationServicesEnabled){
         //TO-DO: Handle location services enabling
+        //Location.requestPermissionsAsync()
+
         alert("Please enable your location services")
         return
     }
@@ -50,7 +26,16 @@ const sendLocation = async (props) => {
 
         let location = await Location.getCurrentPositionAsync({});
         const newMessage = { body: [location] }
-        await fetchJson.POST(newMessage, constants.createNewMessage(props.threadId));
+        
+        const data = await fetchJson.POST(newMessage, constants.createNewMessage(props.threadId))
+        
+
+        try{
+            await dispatch({ type: 'ADD_MESSAGES', data: data.data})
+        }
+        catch(err) {
+            console.log("LOCATION COMPONENT ERROR => ", err)
+        }
         
     }
     catch (error) {
@@ -59,10 +44,13 @@ const sendLocation = async (props) => {
 }
 
 const LocationComponent = (props) => {
+
+    const [messageState, dispatch] = useContext(MessageContext)
+
     return (
         <Button 
             style={{backgroundColor: '#4B58A6'}}
-            onPress={() => sendLocation(props)}
+            onPress={() => sendLocation(props, dispatch)}
         >
             <Icon style={{color: '#fff'}} name="compass"/>
             <Text style={{color: '#fff'}}>Location</Text>
