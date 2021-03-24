@@ -10,7 +10,7 @@ const MenuStack = () => {
     <Drawer.Navigator initialRouteName="Home">
         <Drawer.Screen name="Home" component={MainStack} />
         <Drawer.Screen name="Profile" component={ProfileScreen} />
-        <Drawer.Screen name="Contact" component={ContactStack} />
+        <Drawer.Screen name="QR Code" component={ContactStack} />
     </Drawer.Navigator>
   );
 }
