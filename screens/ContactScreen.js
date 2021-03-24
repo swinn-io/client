@@ -12,6 +12,7 @@ import { EchoContext } from '../services/store/echoStore';
 import { AuthContext } from '../services/store/authStore';
 
 import { isEmpty } from '../services/helperFunctions';
+import QRCode from 'react-native-qrcode-svg';
 
 export default function ContactScreen (props) {
 
@@ -61,7 +62,7 @@ export default function ContactScreen (props) {
                 })
             }
           </Content>
-            <Fab
+            {/* <Fab
                 direction="up"
                 containerStyle={{}}
                 style={{backgroundColor: '#5067FF'}}
@@ -69,7 +70,7 @@ export default function ContactScreen (props) {
                 onPress={() => openQRReader()}
             >
                 <Icon name="add"/>
-            </Fab>
+            </Fab> */}
         </Container>
     );
 

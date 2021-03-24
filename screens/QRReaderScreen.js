@@ -18,6 +18,8 @@ export default function QRReaderScreen (props) {
     const handleBarCodeScanned = ({ type, data }) => {
         setScanned(true);
         alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+
+        //TO-DO: Send POST request to API in order to add friend
     };
 
     if (hasPermission === null) {
