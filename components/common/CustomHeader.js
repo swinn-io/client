@@ -3,6 +3,11 @@ import { Container, Header, Left, Body, Right, Button, Title, Icon } from 'nativ
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { EchoContext } from '../../services/store/echoStore';
 
+
+
+//Imported for testing
+import { Updates } from 'expo';
+
 const CustomHeader = (route) => {
 
   const { isSub, threadTitle } = route
@@ -37,7 +42,12 @@ const CustomHeader = (route) => {
           <Title>{headerTitle}</Title>
         </Body>
         <Right style={styles.headerRight}>
-          <Button transparent>
+          <Button transparent
+
+            onPress={() => {
+              Updates.reload();
+            }}
+          >
               {/* <FontAwesome5 name={echoState.connector.socket.connected ? 'satellite-dish' : 'plug'} style={{ */}
               <FontAwesome5 name={'circle'} solid style={{
                   fontSize:20, 
