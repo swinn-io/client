@@ -8,9 +8,9 @@ const Drawer = createDrawerNavigator();
 const MenuStack = () => {
   return (
     <Drawer.Navigator initialRouteName="Home">
-        <Drawer.Screen name="Home" component={MainStack} />
-        <Drawer.Screen name="Profile" component={ProfileScreen} />
-        <Drawer.Screen name="QR Code" component={ContactStack} />
+        <Drawer.Screen name="Home" component={MainStack} unmountOnBlur={true} options={{unmountOnBlur: true}}/>
+        <Drawer.Screen name="Profile" component={ProfileScreen} unmountOnBlur={true} options={{unmountOnBlur: true}}/>
+        <Drawer.Screen name="QR Code" component={ContactStack} unmountOnBlur={true} options={{unmountOnBlur: true}}/>
     </Drawer.Navigator>
   );
 }
