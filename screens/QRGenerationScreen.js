@@ -14,13 +14,14 @@ import { AuthContext } from '../services/store/authStore';
 
 import { isEmpty } from '../services/helperFunctions';
 import QRCode from 'react-native-qrcode-svg';
+import SocialShare from '../components/SocialShare';
 
 export default function QRGenerationScreen (props) {
 
     const [contacts, setContacts] = useState([]);
     const [user, setUser] = useContext(AuthContext);
     const userid = user.user.id;
-    const QRValue = `https://swinn.io/${userid}`;
+    const QRValue = `https://swinn.io/contact/${userid}`;
 
     return (
         <Container>
@@ -28,7 +29,7 @@ export default function QRGenerationScreen (props) {
           <Container style={styles.container}>
             <QRCode
                 value={QRValue}
-                size={360}
+                size={240}
                 color="black"
                 //Background Color of the QR Code (Optional)
                 backgroundColor="white"
@@ -46,6 +47,7 @@ export default function QRGenerationScreen (props) {
                 logoBackgroundColor="blue"
             />
           </Container>
+          <SocialShare/>
         </Container>
     );
 
