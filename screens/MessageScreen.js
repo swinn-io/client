@@ -13,6 +13,7 @@ import {CustomHeader} from '../components/common'
 import { MessageContext } from '../services/store/messageStore';
 
 import { LocationComponent } from '../components/input';
+import {BatteryComponent} from "../components/input/BatteryComponent";
 
 export default function MessageScreen(props) {
 
@@ -139,6 +140,7 @@ export default function MessageScreen(props) {
                     <Text style={{color: '#fff'}}>Random Numbers</Text>
                 </Button>
                 <LocationComponent threadId={threadId}/>
+                <BatteryComponent threadId={threadId}/>
                 </FooterTab>
             </Footer>
         </Container>
