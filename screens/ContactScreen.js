@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Container, Content, Button, Text, List, ListItem,
     Left, Right, Icon, Thumbnail, 
     Body, Spinner, Fab, View }  from 'native-base';
-import { CustomHeader } from '../components/common'
+import { CustomHeader, Loading } from '../components/common'
 
 import constants from '../constants/constants';
 import fetchJson from '../services/fetchJson';
@@ -22,7 +22,15 @@ export default function ContactScreen (props) {
     
 
     useEffect(() => {
+
         fetchContacts();
+
+        return () => {
+            // Do something when the screen is unfocused
+            // Useful for cleanup functions
+            setContacts([]);
+        };
+
     }, [])
 
     const fetchContacts = async () => {
@@ -40,6 +48,7 @@ export default function ContactScreen (props) {
     }
 
     return (
+        (contacts && contacts.length)?
         <Container>
           <CustomHeader threadTitle={"My Contacts"} props={props}/>
           <Content>
@@ -71,6 +80,9 @@ export default function ContactScreen (props) {
             >
                 <Icon name="add"/>
             </Fab> */}
+        </Container> :
+        <Container>
+            <Loading/>
         </Container>
     );
 

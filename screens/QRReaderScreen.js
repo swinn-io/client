@@ -13,11 +13,26 @@ export default function QRReaderScreen (props) {
         const { status } = await BarCodeScanner.requestPermissionsAsync();
         setHasPermission(status === 'granted');
         })();
+
+
+        return () => {
+            // Do something when the screen is unfocused
+            // Useful for cleanup functions
+        };
+
     }, []);
 
     const handleBarCodeScanned = ({ type, data }) => {
+
         setScanned(true);
-        alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+
+        props.navigation.navigate("CHandle", {
+            type: type,
+            data: data,
+        });
+        
+        
+        // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
 
         //TO-DO: Send POST request to API in order to add friend
     };

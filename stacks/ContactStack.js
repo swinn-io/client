@@ -3,17 +3,32 @@ import { Container, Icon } from 'native-base';
 import ContactScreen from '../screens/ContactScreen';
 import QRReaderScreen from '../screens/QRReaderScreen';
 import QRGenerationScreen from '../screens/QRGenerationScreen';
+import ContactHandleScreen from '../screens/ContactHandleScreen';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 const Tab = createBottomTabNavigator();
+
+const TabsToHide = [
+    "CHandle"
+]
+
 const ContactStack = () => { 
     return (
-        <Tab.Navigator>
+        <Tab.Navigator
+            screenOptions={({ route }) => ({
+                tabBarButton: TabsToHide.includes(route.name)
+                ? () => {
+                    return null;
+                    }
+                : undefined,
+            })}
+        >
             <Tab.Screen
                 name="Contacts"
                 component={ContactScreen}
                 options={{
                     headerShown: false,
+                    unmountOnBlur: true,
                     tabBarIcon: ({ tintColor }) => (
                         <Container>
                             <Icon
@@ -30,6 +45,7 @@ const ContactStack = () => {
                 component={QRReaderScreen}
                 options={{
                     headerShown: false,
+                    unmountOnBlur: true,
                     tabBarIcon: ({ tintColor }) => (
                         <Container>
                             <MaterialCommunityIcons
@@ -57,6 +73,15 @@ const ContactStack = () => {
                     ),
                 }}
             />
+            <Tab.Screen
+                name="CHandle" 
+                component={ContactHandleScreen} 
+                options={{
+                    headerShown: false,
+                    unmountOnBlur: true,
+                }}
+            />
+
         </Tab.Navigator>
     );
   }

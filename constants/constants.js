@@ -29,7 +29,8 @@ module.exports = {
 
     //Contacts
     getAllContacts(){return this.root + `/api/contact`},
-    getSingleContact(){return this.root + `/api/contact/${id}`}
+    getSingleContact(){return this.root + `/api/contact/${id}`},
+    addContact(user_id){return this.root + `/api/contact/${user_id}`}
 
 
     

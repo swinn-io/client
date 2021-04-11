@@ -3,12 +3,13 @@ import { StyleSheet, Share } from 'react-native';
 import { Container, Button, Text } from 'native-base';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { AuthContext } from '../services/store/authStore';
+import constants from '../constants/constants';
 
 export default function SocialShare() {
 
     const [user, setUser] = useContext(AuthContext);
     const userid = user.user.id;
-    const QRValue = `https://swinn.io/contact/${userid}`;
+    const QRValue = constants.addContact(userid);
 
     const shareMessage = () => {
         // Here is the Share API
