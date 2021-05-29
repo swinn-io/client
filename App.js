@@ -1,14 +1,16 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 
-import { Icon, Container } from 'native-base';
+import { Icon, Container, Text } from 'native-base';
 
 //Screen Imports
 import LoadingScreen from './screens/LoadingScreen';
 
 //Stack Imports
-import MenuStack from './stacks/MenuStack';
-import AuthStack from './stacks/AuthStack'
+// import MenuStack from './stacks/MenuStack';
+import MainStack from './stacks/MainStack';
+// import BottomTabs from './stacks/BottomTabs';
+import AuthStack from './stacks/AuthStack';
 
 //Store Imports
 import MessageStore from './services/store/messageStore';
@@ -20,56 +22,70 @@ import { isEmpty } from './services/helperFunctions';
 
 import { GetUser, SignOut } from './services/userService';
 
+import * as Linking from 'expo-linking';
 
-
+const prefix = Linking.makeUrl('/');
 
 export default App = () => {
+  const linking = {
+    prefixes: [prefix],
+  };
 
-    const [user, setUser] = useState({})
-    const [isAuthCompleted, setIsAuthCompleted] = useState(false)
+  const state = {
+    routes: [
+      {
+        name: 'home',
+        state: {},
+      },
+      {
+        name: 'contacts',
+        state: {},
+      },
+      {
+        name: 'settings',
+        state: {},
+      },
+    ],
+  };
 
-    const handleAuth = async () => {
-      if(isEmpty(user)){
+  const [user, setUser] = useState({});
+  const [isAuthCompleted, setIsAuthCompleted] = useState(false);
 
-        GetUser()
-        .then(founduser => {
-          if(founduser){
-            setUser(founduser)
+  const handleAuth = async () => {
+    if (isEmpty(user)) {
+      GetUser()
+        .then((founduser) => {
+          if (founduser) {
+            setUser(founduser);
+          } else {
+            setUser({ access_token: null });
           }
-          else{
-            setUser({access_token: null})
-          }
-          setIsAuthCompleted(true)
+          setIsAuthCompleted(true);
         })
-        .catch(error => console.log("APP handle auth error", error.message));
-      }
+        .catch((error) => console.log('APP handle auth error', error.message));
     }
+  };
 
-    useEffect(() => {
-      handleAuth();
-    }, [user])
+  useEffect(() => {
+    handleAuth();
+  }, [user]);
 
-    if ( !isAuthCompleted ){
-      return (
-        <LoadingScreen></LoadingScreen>
-      );
-    }
-    else {
-      return (
-        <AuthStore user={[user, setUser]}>
-          <EchoStore>
-            <MessageStore>
-                <NavigationContainer>
-                { user.access_token ? 
-                  <MenuStack/>
-                :
-                  <AuthStack/>
-                }
-                </NavigationContainer>
-            </MessageStore>
-          </EchoStore>
-        </AuthStore>
-      )
-    }
-}
-
+  if (!isAuthCompleted) {
+    return <LoadingScreen></LoadingScreen>;
+  } else {
+    return (
+      <AuthStore user={[user, setUser]}>
+        <EchoStore>
+          <MessageStore>
+            <NavigationContainer
+              linking={linking}
+              fallback={<LoadingScreen></LoadingScreen>}
+            >
+              {user.access_token ? <MainStack /> : <AuthStack />}
+            </NavigationContainer>
+          </MessageStore>
+        </EchoStore>
+      </AuthStore>
+    );
+  }
+};
