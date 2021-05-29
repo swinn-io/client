@@ -7,13 +7,14 @@ import ContactStack from './ContactStack';
 import ProfileScreen from '../screens/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
-const MainStack = () => {
+const MainStack = ({ navigation }) => {
   return (
-    <Tab.Navigator initialRouteName='Home'>
+    <Tab.Navigator initialRouteName='home'>
       <Tab.Screen
-        name='Home'
+        name='home'
         component={MessageStack}
         options={{
+          tabBarLabel: 'Home',
           tabBarIcon: ({ tintColor }) => (
             <Container>
               <Icon style={[{ color: tintColor }]} size={28} name={'home'} />
@@ -22,9 +23,10 @@ const MainStack = () => {
         }}
       />
       <Tab.Screen
-        name='Friends'
+        name='friends'
         component={ContactStack}
         options={{
+          tabBarLabel: 'Friends',
           tabBarIcon: ({ tintColor }) => (
             <Container>
               <Icon style={[{ color: tintColor }]} size={28} name={'person'} />
@@ -33,9 +35,10 @@ const MainStack = () => {
         }}
       />
       <Tab.Screen
-        name='Settings'
+        name='settings'
         component={ProfileScreen}
         options={{
+          tabBarLabel: 'Settings',
           tabBarIcon: ({ tintColor }) => (
             <Container>
               <Icon

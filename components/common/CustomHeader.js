@@ -17,7 +17,6 @@ import { Updates } from 'expo';
 
 const CustomHeader = (route) => {
   const { isSub, threadTitle } = route;
-  console.log(route);
 
   const [headerTitle] = useState(threadTitle ? threadTitle : 'Swinn');
   const [echoState] = useContext(EchoContext);

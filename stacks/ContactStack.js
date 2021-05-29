@@ -4,16 +4,19 @@ import ContactScreen from '../screens/ContactScreen';
 import QRReaderScreen from '../screens/QRReaderScreen';
 import QRGenerationScreen from '../screens/QRGenerationScreen';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-const Tab = createBottomTabNavigator();
+// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+// const Tab = createBottomTabNavigator();
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+const Tab = createMaterialTopTabNavigator();
+
 const ContactStack = ({ navigation }) => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator tabBarPosition='bottom'>
       <Tab.Screen
-        name='Contacts'
+        name='contacts'
         component={ContactScreen}
         options={{
-          headerShown: false,
+          tabBarLabel: 'Contacts',
           tabBarIcon: ({ tintColor }) => (
             <Container>
               <Icon
@@ -26,10 +29,11 @@ const ContactStack = ({ navigation }) => {
         }}
       />
       <Tab.Screen
-        name='Add'
+        name='add'
         component={QRReaderScreen}
         options={{
           headerShown: false,
+          tabBarLabel: 'QR Reader',
           tabBarIcon: ({ tintColor }) => (
             <Container>
               <MaterialCommunityIcons
@@ -42,10 +46,11 @@ const ContactStack = ({ navigation }) => {
         }}
       />
       <Tab.Screen
-        name='Your QR Code'
+        name='share'
         component={QRGenerationScreen}
         options={{
           headerShown: false,
+          tabBarLabel: 'Your QR Code',
           tabBarIcon: ({ tintColor }) => (
             <Container>
               <MaterialCommunityIcons

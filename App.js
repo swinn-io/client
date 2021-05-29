@@ -24,28 +24,14 @@ import { GetUser, SignOut } from './services/userService';
 
 import * as Linking from 'expo-linking';
 
-const prefix = Linking.makeUrl('/');
+const prefix1 = Linking.makeUrl('/');
+const prefix2 = Linking.makeUrl('/friends/add*', {
+  queryParams: { id: 'test' },
+});
 
 export default App = () => {
   const linking = {
-    prefixes: [prefix],
-  };
-
-  const state = {
-    routes: [
-      {
-        name: 'home',
-        state: {},
-      },
-      {
-        name: 'contacts',
-        state: {},
-      },
-      {
-        name: 'settings',
-        state: {},
-      },
-    ],
+    prefixes: [prefix1, prefix2],
   };
 
   const [user, setUser] = useState({});
