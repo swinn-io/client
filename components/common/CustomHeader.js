@@ -13,7 +13,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { EchoContext } from '../../services/store/echoStore';
 
 //Imported for testing
-import { Updates } from 'expo';
+import * as Updates from 'expo-updates';
 
 const CustomHeader = (route) => {
   const { isSub, threadTitle } = route;
@@ -48,7 +48,7 @@ const CustomHeader = (route) => {
         <Button
           transparent
           onPress={() => {
-            Updates.reload();
+            Updates.reloadAsync();
           }}
         >
           {/* <FontAwesome5 name={echoState.connector.socket.connected ? 'satellite-dish' : 'plug'} style={{ */}
