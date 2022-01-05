@@ -22,14 +22,15 @@ import { StyleSheet } from 'react-native';
 
 import constants from '../constants/constants';
 import fetchJson from '../services/fetchJson';
-import { CustomHeader } from '../components/common';
+import { CustomHeader, Loading } from '../components/common';
 
 import { MessageContext } from '../services/store/messageStore';
 
 import { LocationComponent } from '../components/input';
 import { BatteryComponent } from '../components/input/BatteryComponent';
+import LoadingScreen from './LoadingScreen';
 
-export default function MessageScreen(props) {
+const MessageScreen = (props) => {
   const { threadId, threadTitle } = props.route.params;
   const [newMessage, setNewMessage] = useState('');
   const [active, setActive] = useState(false);
@@ -63,6 +64,9 @@ export default function MessageScreen(props) {
       const response = await fetchJson.GET(
         constants.getSingleMessage(threadId)
       );
+
+      setActive(true);
+
       const threadMessages = response.data.attributes.messages;
 
       let messages = [];
@@ -138,24 +142,32 @@ export default function MessageScreen(props) {
   return (
     <Container>
       <CustomHeader isSub={true} threadTitle={threadTitle} props={props} />
-      <List
-        dataArray={messageState.messages[threadId]}
-        keyExtractor={(message) => message.id}
-        renderRow={(message) => renderRow(message)}
-      ></List>
-      <Footer>
-        <FooterTab>
-          <Button
-            style={{ backgroundColor: '#F2786D' }}
-            onPress={handleNewMessage}
-          >
-            <Icon style={{ color: '#fff' }} name='cellular' />
-            <Text style={{ color: '#fff' }}>Random Numbers</Text>
-          </Button>
-          <LocationComponent threadId={threadId} />
-          <BatteryComponent threadId={threadId} />
-        </FooterTab>
-      </Footer>
+      {active && active ? (
+        <>
+          <List
+            dataArray={messageState.messages[threadId]}
+            keyExtractor={(message) => message.id}
+            renderRow={(message) => renderRow(message)}
+          ></List>
+          <Footer>
+            <FooterTab>
+              <Button
+                style={{ backgroundColor: '#F2786D' }}
+                onPress={handleNewMessage}
+              >
+                <Icon style={{ color: '#fff' }} name='cellular' />
+                <Text style={{ color: '#fff' }}>Random Numbers</Text>
+              </Button>
+              <LocationComponent threadId={threadId} />
+              <BatteryComponent threadId={threadId} />
+            </FooterTab>
+          </Footer>
+        </>
+      ) : (
+        <LoadingScreen></LoadingScreen>
+      )}
     </Container>
   );
-}
+};
+
+export default MessageScreen;

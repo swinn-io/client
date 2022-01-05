@@ -25,13 +25,30 @@ import { GetUser, SignOut } from './services/userService';
 import * as Linking from 'expo-linking';
 
 const prefix1 = Linking.makeUrl('/');
-const prefix2 = Linking.makeUrl('/friends/add*', {
-  queryParams: { id: 'test' },
-});
 
 export default App = () => {
   const linking = {
-    prefixes: [prefix1, prefix2],
+    prefixes: [
+      prefix1,
+      //  prefix2
+    ],
+    config: {
+      screens: {
+        friends: {
+          screens: {
+            add: {
+              path: '/friends/add/:id?',
+              parse: {
+                id: (id) => id,
+              },
+              stringify: {
+                id: (id) => id.replace(/^user-/, ''),
+              },
+            },
+          },
+        },
+      },
+    },
   };
 
   const [user, setUser] = useState({});
