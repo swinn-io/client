@@ -26,15 +26,23 @@ import { AuthContext } from '../services/store/authStore';
 
 import { isEmpty } from '../services/helperFunctions';
 import QRCode from 'react-native-qrcode-svg';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function ContactScreen({ navigation }) {
   const [contacts, setContacts] = useState([]);
   const [user, setUser] = useContext(AuthContext);
   const userid = user.user.id;
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
-    fetchContacts();
-  }, []);
+    if (isFocused === true) {
+      fetchContacts();
+    }
+    return () => {
+      setContacts([]);
+    };
+  }, [isFocused]);
 
   const fetchContacts = async () => {
     try {
