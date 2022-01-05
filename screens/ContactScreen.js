@@ -1,8 +1,21 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Container, Content, Button, Text, List, ListItem,
-    Left, Right, Icon, Thumbnail, 
-    Body, Spinner, Fab, View }  from 'native-base';
-import { CustomHeader } from '../components/common'
+import {
+  Container,
+  Content,
+  Button,
+  Text,
+  List,
+  ListItem,
+  Left,
+  Right,
+  Icon,
+  Thumbnail,
+  Body,
+  Spinner,
+  Fab,
+  View,
+} from 'native-base';
+import { CustomHeader } from '../components/common';
 
 import constants from '../constants/constants';
 import fetchJson from '../services/fetchJson';
@@ -14,55 +27,46 @@ import { AuthContext } from '../services/store/authStore';
 import { isEmpty } from '../services/helperFunctions';
 import QRCode from 'react-native-qrcode-svg';
 
-export default function ContactScreen (props) {
+export default function ContactScreen({ navigation }) {
+  const [contacts, setContacts] = useState([]);
+  const [user, setUser] = useContext(AuthContext);
+  const userid = user.user.id;
 
-    const [contacts, setContacts] = useState([]);
-    const [user, setUser] = useContext(AuthContext);
-    const userid = user.user.id;
-    
+  useEffect(() => {
+    fetchContacts();
+  }, []);
 
-    useEffect(() => {
-        fetchContacts();
-    }, [])
-
-    const fetchContacts = async () => {
-        try {
-            let response = await fetchJson.GET(constants.getAllContacts());
-            let contactsFromResponse = response.data;
-            setContacts(contactsFromResponse);
-        } catch (error) {
-            console.log("Contact List Get Error", error.message);
-        }
+  const fetchContacts = async () => {
+    try {
+      let response = await fetchJson.GET(constants.getAllContacts());
+      let contactsFromResponse = response.data;
+      setContacts(contactsFromResponse);
+    } catch (error) {
+      console.log('Contact List Get Error', error.message);
     }
+  };
 
-    const openQRReader = () => {
-        props.navigation.navigate("QRReader");
-    }
+  const openQRReader = () => {
+    navigation.navigate('QRReader');
+  };
 
-    return (
-        <Container>
-          <CustomHeader threadTitle={"My Contacts"} props={props}/>
-          <Content>
-            {
-                (contacts).map((contact) => {
-                    
-                    let username = contact.attributes.name;
-                    let userId = contact.attributes.source.id;
-                    return (
-                        <ListItem
-                            key = { userId }
-                            label = { username }
-                            value = { userId }
-                        >
-                            <Body>
-                                <Text>{username}</Text>
-                            </Body>
-                        </ListItem>
-                    )
-                })
-            }
-          </Content>
-            {/* <Fab
+  return (
+    <Container>
+      <CustomHeader threadTitle={'My Contacts'} navigation={navigation} />
+      <Content>
+        {contacts.map((contact) => {
+          let username = contact.attributes.name;
+          let userId = contact.attributes.source.id;
+          return (
+            <ListItem key={userId} label={username} value={userId}>
+              <Body>
+                <Text>{username}</Text>
+              </Body>
+            </ListItem>
+          );
+        })}
+      </Content>
+      {/* <Fab
                 direction="up"
                 containerStyle={{}}
                 style={{backgroundColor: '#5067FF'}}
@@ -71,8 +75,6 @@ export default function ContactScreen (props) {
             >
                 <Icon name="add"/>
             </Fab> */}
-        </Container>
-    );
-
-       
+    </Container>
+  );
 }

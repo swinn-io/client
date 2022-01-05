@@ -3,18 +3,16 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { Container, Icon } from 'native-base';
 import MessageStack from './MessageStack';
-import ContactStack from './ContactStack';
 import ProfileScreen from '../screens/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
-const MainStack = ({ navigation }) => {
+const BottomTabs = () => {
   return (
-    <Tab.Navigator initialRouteName='home'>
+    <Tab.Navigator initialRouteName='Home'>
       <Tab.Screen
-        name='home'
+        name='Home'
         component={MessageStack}
         options={{
-          tabBarLabel: 'Home',
           tabBarIcon: ({ tintColor }) => (
             <Container>
               <Icon style={[{ color: tintColor }]} size={28} name={'home'} />
@@ -23,29 +21,12 @@ const MainStack = ({ navigation }) => {
         }}
       />
       <Tab.Screen
-        name='friends'
-        component={ContactStack}
+        name='Profile'
+        component={ProfileScreen}
         options={{
-          tabBarLabel: 'Friends',
           tabBarIcon: ({ tintColor }) => (
             <Container>
               <Icon style={[{ color: tintColor }]} size={28} name={'person'} />
-            </Container>
-          ),
-        }}
-      />
-      <Tab.Screen
-        name='settings'
-        component={ProfileScreen}
-        options={{
-          tabBarLabel: 'Settings',
-          tabBarIcon: ({ tintColor }) => (
-            <Container>
-              <Icon
-                style={[{ color: tintColor }]}
-                size={28}
-                name={'settings'}
-              />
             </Container>
           ),
         }}
@@ -55,4 +36,4 @@ const MainStack = ({ navigation }) => {
 };
 
 //export { BottomTabs }
-export default MainStack;
+export default BottomTabs;
