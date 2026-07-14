@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 
-import { Icon, Container, Text } from 'native-base';
+import { GluestackUIProvider } from '@gluestack-ui/themed';
+import { config } from '@gluestack-ui/config';
 
 //Screen Imports
 import LoadingScreen from './screens/LoadingScreen';
@@ -24,7 +25,7 @@ import { GetUser, SignOut } from './services/userService';
 
 import * as Linking from 'expo-linking';
 
-const prefix1 = Linking.makeUrl('/');
+const prefix1 = Linking.createURL('/');
 
 export default App = () => {
   const linking = {
@@ -74,21 +75,27 @@ export default App = () => {
   }, [user]);
 
   if (!isAuthCompleted) {
-    return <LoadingScreen></LoadingScreen>;
+    return (
+      <GluestackUIProvider config={config}>
+        <LoadingScreen></LoadingScreen>
+      </GluestackUIProvider>
+    );
   } else {
     return (
-      <AuthStore user={[user, setUser]}>
-        <EchoStore>
-          <MessageStore>
-            <NavigationContainer
-              linking={linking}
-              fallback={<LoadingScreen></LoadingScreen>}
-            >
-              {user.access_token ? <MainStack /> : <AuthStack />}
-            </NavigationContainer>
-          </MessageStore>
-        </EchoStore>
-      </AuthStore>
+      <GluestackUIProvider config={config}>
+        <AuthStore user={[user, setUser]}>
+          <EchoStore>
+            <MessageStore>
+              <NavigationContainer
+                linking={linking}
+                fallback={<LoadingScreen></LoadingScreen>}
+              >
+                {user.access_token ? <MainStack /> : <AuthStack />}
+              </NavigationContainer>
+            </MessageStore>
+          </EchoStore>
+        </AuthStore>
+      </GluestackUIProvider>
     );
   }
 };
