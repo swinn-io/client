@@ -1,24 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { StackActions, useFocusEffect } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
-import { BarCodeScanner } from 'expo-barcode-scanner';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 import LoadingScreen from './LoadingScreen';
 import fetchJson from '../services/fetchJson';
 import constants from '../constants/constants';
-import { CommonActions, useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 import { Box } from '@gluestack-ui/themed';
 
 const QRReaderScreen = ({ navigation, route }) => {
-  const [hasPermission, setHasPermission] = useState(null);
+  const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
 
   const isFocused = useIsFocused();
-
-  const runBarcodeScanner = async () => {
-    const { status } = await BarCodeScanner.requestPermissionsAsync();
-    setHasPermission(status === 'granted');
-  };
 
   const handleAddContactByRouting = async (id) => {
     console.log(`Contact information has been provided via routing...`);
@@ -32,15 +26,14 @@ const QRReaderScreen = ({ navigation, route }) => {
       if (route.params && route.params.id) {
         const id = route.params.id;
         handleAddContactByRouting(id);
-      } else {
-        runBarcodeScanner();
+      } else if (!permission?.granted) {
+        requestPermission();
       }
     } else {
       console.log('isFocused ', isFocused);
     }
 
     return () => {
-      setHasPermission(null);
       setScanned(false);
     };
   }, [isFocused]);
@@ -75,7 +68,7 @@ const QRReaderScreen = ({ navigation, route }) => {
     addContact(data);
   };
 
-  if (hasPermission === null) {
+  if (!permission) {
     return (
       <View>
         <LoadingScreen></LoadingScreen>
@@ -83,22 +76,20 @@ const QRReaderScreen = ({ navigation, route }) => {
       </View>
     );
   }
-  if (hasPermission === false) {
+  if (!permission.granted) {
     return <Text>No access to camera</Text>;
   }
 
   return (
     <View style={styles.container}>
-      <BarCodeScanner
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+      <CameraView
+        onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
+        barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
         style={StyleSheet.absoluteFillObject}
       />
       {scanned && (
         <Box style={styles.rescanContainer}>
-          <Button
-            title={'Tap to Scan Again'}
-            onPress={() => setScanned(false)}
-          />
+          <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />
         </Box>
       )}
     </View>

@@ -46,12 +46,12 @@
 - [x] `expo-doctor` clean (16/16); `expo export` (iOS) bundles successfully.
 - [ ] Run on iOS + Android device/simulator (dev build) to confirm runtime — **not yet done**.
 
-## Phase 2 — SDK 50 → 52
-- [ ] Step 51 then 52 (`expo install expo@<sdk> --fix` each).
-- [ ] New Architecture default-on at 52 — verify each native dep is Fabric-compatible.
-- [ ] `expo-barcode-scanner` → `expo-camera` (rewire QR scanner, PR #34).
-- [ ] React Navigation v6 → v7.
-- [ ] Checkpoint.
+## Phase 2 — SDK 50 → 52  ✅ bundles
+- [x] Bump to SDK 52 (RN 0.76.9, React 18.3.1); `expo install --fix` aligned.
+- [x] `expo-barcode-scanner` (removed in SDK 51) → `expo-camera` `CameraView` + `useCameraPermissions` in QRReaderScreen.
+- [x] React Navigation v6 → v7.
+- [x] `.gitignore` `.expo/`; untrack `.expo`. `expo-doctor` 18/18; `expo export` (iOS) bundles.
+- [ ] Runtime verification on device (New Arch default-on) — not yet done.
 
 ## Phase 3 — SDK 52 → 57
 - [ ] Step SDKs 53, 54, 55, 56, 57.
