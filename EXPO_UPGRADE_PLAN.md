@@ -53,18 +53,20 @@
 - [x] `.gitignore` `.expo/`; untrack `.expo`. `expo-doctor` 18/18; `expo export` (iOS) bundles.
 - [ ] Runtime verification on device (New Arch default-on) — not yet done.
 
-## Phase 3 — SDK 52 → 57
-- [ ] Step SDKs 53, 54, 55, 56, 57.
-- [ ] React 18 → 19.2, RN → 0.86.
-- [ ] Android edge-to-edge (SDK 53+).
-- [ ] Reanimated 3 → 4.
-- [ ] Revalidate `socket.io-client` / `laravel-echo` vs server.
-- [ ] Checkpoint.
+## Phase 3 — SDK 52 → 57  ✅ bundles
+- [x] Node 22 (pinned via `.nvmrc`); bump to SDK 57 (RN 0.86, React 19.2.3); `expo install --fix`.
+- [x] Reanimated 3 → 4 (Babel plugin moved to `react-native-worklets/plugin`; install `react-native-worklets`).
+- [x] Install `expo-splash-screen`; move `splash` from app.json root → `expo-splash-screen` plugin config.
+- [x] Add explicit `@expo/vector-icons` dep (no longer transitive via `expo` in SDK 57).
+- [x] `expo-doctor` 20/20; `expo export` (iOS) bundles.
+- [ ] Android edge-to-edge review (SDK 53+) — verify on device.
+- [ ] Revalidate `socket.io-client` / `laravel-echo` vs server — runtime check.
 
 ## Phase 4 — Verify & land
-- [ ] `npx expo-doctor` clean.
+- [x] `npx expo-doctor` clean (20/20) on SDK 57.
 - [ ] Dev build runs on iOS + Android; smoke-test auth, QR add-contact, threads/echo, navigation.
-- [ ] Merge to master.
+- [ ] Visual pass on all screens (NativeBase → gluestack UI changed).
+- [ ] Merge PR #45 to master (never push to master directly).
 
 ---
 
