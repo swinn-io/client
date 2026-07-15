@@ -1,8 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { Component, useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import * as WebBrowser from 'expo-web-browser';
 import { makeRedirectUri, useAuthRequest } from 'expo-auth-session';
-import { Container, Header, Content, Button, Text } from 'native-base';
+import { Box, Button, ButtonText } from '@gluestack-ui/themed';
 import constants from '../constants/constants';
 
 import { AuthContext } from '../services/store/authStore';
@@ -64,13 +64,11 @@ export default function AuthScreen() {
   };
 
   return (
-    <Container>
-      <Content contentContainerStyle={{ justifyContent: 'center', flex: 1 }}>
-        <Button style={{ alignSelf: 'center' }} onPress={handleSignup}>
-          <Text>Login</Text>
-        </Button>
-      </Content>
+    <Box flex={1} justifyContent='center'>
+      <Button alignSelf='center' onPress={handleSignup}>
+        <ButtonText>Login</ButtonText>
+      </Button>
       <StatusBar style='auto' />
-    </Container>
+    </Box>
   );
 }

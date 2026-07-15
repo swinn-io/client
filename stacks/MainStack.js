@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { MaterialIcons } from '@expo/vector-icons';
 
-import { Container, Icon } from 'native-base';
 import MessageStack from './MessageStack';
 import ContactStack from './ContactStack';
 import ProfileScreen from '../screens/ProfileScreen';
@@ -15,10 +15,8 @@ const MainStack = ({ navigation }) => {
         component={MessageStack}
         options={{
           tabBarLabel: 'Home',
-          tabBarIcon: ({ tintColor }) => (
-            <Container>
-              <Icon style={[{ color: tintColor }]} size={28} name={'home'} />
-            </Container>
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons color={color} size={size} name='home' />
           ),
         }}
       />
@@ -27,10 +25,8 @@ const MainStack = ({ navigation }) => {
         component={ContactStack}
         options={{
           tabBarLabel: 'Friends',
-          tabBarIcon: ({ tintColor }) => (
-            <Container>
-              <Icon style={[{ color: tintColor }]} size={28} name={'person'} />
-            </Container>
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons color={color} size={size} name='person' />
           ),
         }}
       />
@@ -39,14 +35,8 @@ const MainStack = ({ navigation }) => {
         component={ProfileScreen}
         options={{
           tabBarLabel: 'Settings',
-          tabBarIcon: ({ tintColor }) => (
-            <Container>
-              <Icon
-                style={[{ color: tintColor }]}
-                size={28}
-                name={'settings'}
-              />
-            </Container>
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons color={color} size={size} name='settings' />
           ),
         }}
       />
@@ -54,5 +44,4 @@ const MainStack = ({ navigation }) => {
   );
 };
 
-//export { BottomTabs }
 export default MainStack;

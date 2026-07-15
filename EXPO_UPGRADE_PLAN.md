@@ -34,15 +34,17 @@
 - [ ] Current Xcode + Android SDK.
 - [ ] Add `eas.json`; configure EAS Build for dev builds.
 
-## Phase 1 — Jump to SDK 50 (first runnable checkpoint)
-- [ ] Delete stale SDK-43 `yarn.lock`; set `expo` ~50, `react` 18.2, `react-native` 0.73.
-- [ ] `npx expo install --fix` to align all expo-managed deps.
-- [ ] Remove `eject` script; remove legacy `react-navigation@4` trio.
-- [ ] Upgrade `@react-navigation/*` v5 → v6.
-- [ ] `expo-random` → `expo-crypto`.
-- [ ] `react-native-reanimated` 2.2 → 3.x (Babel plugin/worklets).
-- [ ] **Replace NativeBase v2 → gluestack-ui** (required — NB2 won't bundle on RN 0.73). Touches every screen.
-- [ ] Checkpoint: `expo-doctor` clean, app bundles + runs iOS/Android.
+## Phase 1 — Jump to SDK 50 (first runnable checkpoint)  ✅ bundles
+- [x] Delete stale SDK-43 `yarn.lock`; set `expo` ~50, `react` 18.2, `react-native` 0.73.
+- [x] `npx expo install --fix` to align all expo-managed deps.
+- [x] Remove `eject` script; remove legacy `react-navigation@4` trio (were dead — zero imports).
+- [x] Upgrade `@react-navigation/*` v5 → v6 (+ `tabBarIcon` `tintColor` → `color`).
+- [x] `expo-random` → `expo-crypto` (was unused; nothing to rewire).
+- [x] `react-native-reanimated` 2.2 → 3.x (Babel plugin added).
+- [x] **Replace NativeBase v2 → gluestack-ui** — all 28 files converted; icons → `@expo/vector-icons`.
+- [x] Add `@babel/plugin-transform-class-static-block` (gluestack react-stately/react-aria deps need it).
+- [x] `expo-doctor` clean (16/16); `expo export` (iOS) bundles successfully.
+- [ ] Run on iOS + Android device/simulator (dev build) to confirm runtime — **not yet done**.
 
 ## Phase 2 — SDK 50 → 52
 - [ ] Step 51 then 52 (`expo install expo@<sdk> --fix` each).

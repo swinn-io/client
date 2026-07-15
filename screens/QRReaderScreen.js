@@ -7,7 +7,7 @@ import fetchJson from '../services/fetchJson';
 import constants from '../constants/constants';
 import { CommonActions, useIsFocused } from '@react-navigation/native';
 
-import { Container } from 'native-base';
+import { Box } from '@gluestack-ui/themed';
 
 const QRReaderScreen = ({ navigation, route }) => {
   const [hasPermission, setHasPermission] = useState(null);
@@ -94,12 +94,12 @@ const QRReaderScreen = ({ navigation, route }) => {
         style={StyleSheet.absoluteFillObject}
       />
       {scanned && (
-        <Container style={styles.rescanContainer}>
+        <Box style={styles.rescanContainer}>
           <Button
             title={'Tap to Scan Again'}
             onPress={() => setScanned(false)}
           />
-        </Container>
+        </Box>
       )}
     </View>
   );

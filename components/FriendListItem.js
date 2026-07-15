@@ -1,40 +1,26 @@
-import {StatusBar} from 'expo-status-bar';
-import React, { useState } from 'react';
-import * as WebBrowser from 'expo-web-browser';
-import {makeRedirectUri, useAuthRequest} from 'expo-auth-session';
-import { StyleSheet, View} from 'react-native';
-import { Container, Header, Content, List, ListItem, Thumbnail, Text, Left, Body, Right, Button, Icon } from 'native-base';
+import React from 'react';
+import {
+  HStack,
+  VStack,
+  Avatar,
+  AvatarImage,
+  Text,
+  Button,
+} from '@gluestack-ui/themed';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function FriendListItem(props) {
-
-    const [name, setName] = useState(props.name);
-    const [notifications, setNotifications] = useState(props.notifications);
-    const [uri, setUri] = useState(props.uri);
-
-    return (
-        <ListItem avatar>
-            <Left>
-                <Thumbnail source={{ uri: props.uri }} />
-            </Left>
-            <Body>
-                <Text>{props.name}</Text>
-                <Text note></Text>
-                <Text note></Text>
-            </Body>
-            <Right>
-            <Button active>
-              <Icon active name="navigate" />
-            </Button>
-            </Right>
-        </ListItem>
-    );
+  return (
+    <HStack alignItems='center' space='md' p='$2'>
+      <Avatar>
+        <AvatarImage source={{ uri: props.uri }} />
+      </Avatar>
+      <VStack flex={1}>
+        <Text>{props.name}</Text>
+      </VStack>
+      <Button>
+        <Ionicons name='navigate' size={20} color='#fff' />
+      </Button>
+    </HStack>
+  );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});
