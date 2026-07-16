@@ -42,7 +42,7 @@ const CustomHeader = (route) => {
             solid
             style={{
               fontSize: 20,
-              color: echoState.connector.socket.connected ? 'green' : 'red',
+              color: echoState.connectionStatus() === 'connected' ? 'green' : 'red',
             }}
           />
         </Button>
