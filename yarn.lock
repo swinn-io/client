@@ -957,7 +957,7 @@
   dependencies:
     debug "^4.3.4"
 
-"@expo/schema-utils@^57.0.2":
+"@expo/schema-utils@^57.0.1", "@expo/schema-utils@^57.0.2":
   version "57.0.2"
   resolved "https://registry.yarnpkg.com/@expo/schema-utils/-/schema-utils-57.0.2.tgz#abbce2902bd23a338691d600815a6093cc6f4403"
   integrity sha512-fMu/jyN0l1Wzv7XkeWR4IYCx1M8ryui3FdBNGrWwbRgJ7EhxXxK8E2jxP2W3pbgUwUY0V3hG8+GyfCZwny+Lxw==
@@ -2992,6 +2992,38 @@ expo-crypto@~57.0.1:
   version "57.0.1"
   resolved "https://registry.yarnpkg.com/expo-crypto/-/expo-crypto-57.0.1.tgz#78aef14f4e2bf8ce067f7f6dfd54549805e35551"
   integrity sha512-xwegXQw3ATgeL1ZuqbSNrGzOeG+zNeh6Z6DSJk825Qpa3TEQQ1kG3ioE1p3g/SNF373BAVz2iBKUTSytlIbBRA==
+
+expo-dev-client@~57.0.6:
+  version "57.0.6"
+  resolved "https://registry.yarnpkg.com/expo-dev-client/-/expo-dev-client-57.0.6.tgz#50d2a6292028616860290cdac8a12c59b4c361f6"
+  integrity sha512-15EN+qsd5CoIt2Mke0Hvah4GR5OgLOC2dJr74LBd9gPEtGeyx1YL1hd4AEKK/OGfD7Iy4Gohe/mKQp6TW538Yg==
+  dependencies:
+    expo-dev-launcher "~57.0.6"
+    expo-dev-menu "~57.0.6"
+    expo-dev-menu-interface "~57.0.0"
+    expo-manifests "~57.0.0"
+    expo-updates-interface "~57.0.0"
+
+expo-dev-launcher@~57.0.6:
+  version "57.0.6"
+  resolved "https://registry.yarnpkg.com/expo-dev-launcher/-/expo-dev-launcher-57.0.6.tgz#b41f2af0cd9c731bb08f65e7d3bfc17200f00ad7"
+  integrity sha512-abCoERL908FDHrVq7i2of84ZW0fDbArH4IHa2rcN6tsYMlhEZu1Vi3ytkMQ4vYtqzpsMEwisHm5JkxPbvf5Dlg==
+  dependencies:
+    "@expo/schema-utils" "^57.0.1"
+    expo-dev-menu "~57.0.6"
+    expo-manifests "~57.0.0"
+
+expo-dev-menu-interface@~57.0.0:
+  version "57.0.0"
+  resolved "https://registry.yarnpkg.com/expo-dev-menu-interface/-/expo-dev-menu-interface-57.0.0.tgz#23bd53c35d00cead3fd963a9bc3e2abf8c00467d"
+  integrity sha512-F47VdzOHYc19FhI/jBgctpO8a5UskTIxG6a1E5t3W5gF8VImuvBQffdXXfLHhsuCl7dS3v3U0R45cleeVXO1Zg==
+
+expo-dev-menu@~57.0.6:
+  version "57.0.6"
+  resolved "https://registry.yarnpkg.com/expo-dev-menu/-/expo-dev-menu-57.0.6.tgz#1f9f0f30c01be4f7371ea4bd9bcb0ef936914cb4"
+  integrity sha512-P8NaBfo5i8E2P4qDALZxpoLy7Px9BXMWnl7D6FmyJB5B2EyrRVDmvy6QtjRZrTrVnznGzUVBYRZtpUOxgGA1NA==
+  dependencies:
+    expo-dev-menu-interface "~57.0.0"
 
 expo-eas-client@~57.0.0:
   version "57.0.1"
