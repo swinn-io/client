@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext } from 'react';
 import Echo from 'laravel-echo';
-import Pusher from 'pusher-js/react-native';
+import Pusher from 'pusher-js';
 
 import { AuthContext } from './authStore';
 import config from '../../config/env';
