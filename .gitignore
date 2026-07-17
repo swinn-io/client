@@ -17,3 +17,10 @@ web-build/
 .env*.local
 # Never commit a root .env (secrets live in .env.local); mode files stay tracked
 /.env
+
+# Generated native projects (regenerate with `expo prebuild`)
+/ios
+/android
+
+# Local editor/agent settings
+/.claude
