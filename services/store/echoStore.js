@@ -1,9 +1,14 @@
 import React, { createContext, useState, useContext } from 'react';
 import Echo from 'laravel-echo';
-import Pusher from 'pusher-js';
+import PusherPkg from 'pusher-js';
 
 import { AuthContext } from './authStore';
 import config from '../../config/env';
+
+// pusher-js's native build exports the class as a named `.Pusher` property; its
+// web build exposes it as the default/module export. Unwrap so `new Pusher(...)`
+// works on both platforms.
+const Pusher = PusherPkg?.Pusher ?? PusherPkg?.default ?? PusherPkg;
 
 // laravel-echo's Pusher/Reverb connector expects a global Pusher (no window in RN).
 global.Pusher = Pusher;
