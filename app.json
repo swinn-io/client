@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "ping-pong",
-    "slug": "ping-pong",
+    "name": "swinn",
+    "slug": "swinn",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "exp",
+    "scheme": "swinn",
     "icon": "./assets/icon.png",
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -13,7 +13,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "me.swinn.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"

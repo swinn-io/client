@@ -7,6 +7,7 @@ const RAW = {
   reverbHost: process.env.EXPO_PUBLIC_REVERB_HOST,
   reverbPort: process.env.EXPO_PUBLIC_REVERB_PORT,
   reverbScheme: process.env.EXPO_PUBLIC_REVERB_SCHEME,
+  oauthClientId: process.env.EXPO_PUBLIC_OAUTH_CLIENT_ID,
 };
 
 // Pure: given a raw env-ish object, produce the typed config (defaults = prod).
@@ -15,6 +16,11 @@ export function resolveConfig(raw = RAW) {
   return {
     api: {
       root: raw.apiRoot || 'https://swinn.me',
+    },
+    auth: {
+      // Passport OAuth client id for this app (public/PKCE client). Not secret,
+      // but environment-specific — set via EXPO_PUBLIC_OAUTH_CLIENT_ID.
+      clientId: raw.oauthClientId || '',
     },
     reverb: {
       key: raw.reverbKey || '',
