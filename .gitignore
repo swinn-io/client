@@ -15,3 +15,5 @@ web-build/
 
 # Local env overrides
 .env*.local
+# Never commit a root .env (secrets live in .env.local); mode files stay tracked
+/.env
