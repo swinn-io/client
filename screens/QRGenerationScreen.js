@@ -1,31 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
-import {
-  Container,
-  Content,
-  Button,
-  Text,
-  List,
-  ListItem,
-  Left,
-  Right,
-  Icon,
-  Thumbnail,
-  Body,
-  Spinner,
-  Fab,
-  View,
-} from 'native-base';
+import { Box } from '@gluestack-ui/themed';
 import { StyleSheet } from 'react-native';
 import { CustomHeader } from '../components/common';
 
-import constants from '../constants/constants';
-import fetchJson from '../services/fetchJson';
-
-import { MessageContext } from '../services/store/messageStore';
-import { EchoContext } from '../services/store/echoStore';
 import { AuthContext } from '../services/store/authStore';
 
-import { isEmpty } from '../services/helperFunctions';
 import QRCode from 'react-native-qrcode-svg';
 import SocialShare from '../components/SocialShare';
 
@@ -39,19 +18,15 @@ export default function QRGenerationScreen(props) {
     console.log("I'm in QRGenerationScreen");
   }, []);
   return (
-    <Container>
+    <Box flex={1}>
       <CustomHeader threadTitle={'My QR Code'} props={props} />
-      <Container style={styles.container}>
+      <Box style={styles.container}>
         <QRCode
           value={QRValue}
           size={240}
           color='black'
           //Background Color of the QR Code (Optional)
           backgroundColor='white'
-          //   logo={{
-          //     url:
-          //       '',
-          //   }}
           //Center Logo size  (Optional)
           logoSize={30}
           //Center Logo margin (Optional)
@@ -61,9 +36,9 @@ export default function QRGenerationScreen(props) {
           //Center Logo background (Optional)
           logoBackgroundColor='blue'
         />
-      </Container>
+      </Box>
       <SocialShare />
-    </Container>
+    </Box>
   );
 }
 

@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 
-import { Icon, Container, Text } from 'native-base';
+import { GluestackUIProvider } from '@gluestack-ui/themed';
+import { config } from '@gluestack-ui/config';
 
 //Screen Imports
 import LoadingScreen from './screens/LoadingScreen';
@@ -23,10 +24,11 @@ import { isEmpty } from './services/helperFunctions';
 import { GetUser, SignOut } from './services/userService';
 
 import * as Linking from 'expo-linking';
+import * as SplashScreen from 'expo-splash-screen';
 
-const prefix1 = Linking.makeUrl('/');
+const prefix1 = Linking.createURL('/');
 
-export default App = () => {
+const App = () => {
   const linking = {
     prefixes: [
       prefix1,
@@ -58,7 +60,11 @@ export default App = () => {
     if (isEmpty(user)) {
       GetUser()
         .then((founduser) => {
-          if (founduser) {
+          // Only treat a restored session as authenticated if it has both a
+          // token and a populated profile (userState.user.id is read across the
+          // app). A stale user (token only, pre-profile-fetch) routes to login
+          // instead of crashing the home screen.
+          if (founduser && founduser.access_token && founduser.user?.id) {
             setUser(founduser);
           } else {
             setUser({ access_token: null });
@@ -73,22 +79,42 @@ export default App = () => {
     handleAuth();
   }, [user]);
 
+  // SDK 50+ keeps the native splash up until explicitly hidden; hide it once
+  // the initial auth check resolves so the app UI becomes visible.
+  useEffect(() => {
+    if (isAuthCompleted) {
+      SplashScreen.hideAsync().catch(() => {});
+    }
+  }, [isAuthCompleted]);
+
   if (!isAuthCompleted) {
-    return <LoadingScreen></LoadingScreen>;
+    return (
+      <GluestackUIProvider config={config}>
+        <LoadingScreen></LoadingScreen>
+      </GluestackUIProvider>
+    );
   } else {
     return (
-      <AuthStore user={[user, setUser]}>
-        <EchoStore>
-          <MessageStore>
-            <NavigationContainer
-              linking={linking}
-              fallback={<LoadingScreen></LoadingScreen>}
-            >
-              {user.access_token ? <MainStack /> : <AuthStack />}
-            </NavigationContainer>
-          </MessageStore>
-        </EchoStore>
-      </AuthStore>
+      <GluestackUIProvider config={config}>
+        <AuthStore user={[user, setUser]}>
+          <EchoStore>
+            <MessageStore>
+              <NavigationContainer
+                linking={linking}
+                fallback={<LoadingScreen></LoadingScreen>}
+              >
+                {user.access_token && user.user?.id ? (
+                  <MainStack />
+                ) : (
+                  <AuthStack />
+                )}
+              </NavigationContainer>
+            </MessageStore>
+          </EchoStore>
+        </AuthStore>
+      </GluestackUIProvider>
     );
   }
 };
+
+export default App;

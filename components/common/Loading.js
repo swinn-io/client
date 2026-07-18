@@ -1,20 +1,12 @@
 import React from 'react';
-import { Container, Spinner } from 'native-base';
+import { Box, Spinner } from '@gluestack-ui/themed';
 
 const Loading = ({ size }) => {
   return (
-    <Container style={styles.spinnerContainer}>
+    <Box flex={1} justifyContent='center' alignItems='center'>
       <Spinner size={size} />
-    </Container>
+    </Box>
   );
-};
-
-const styles = {
-  spinnerContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
 };
 
 export { Loading };

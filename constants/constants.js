@@ -1,9 +1,11 @@
+const config = require('../config/env').default;
+
 module.exports = {
   //Root
-  root: 'https://swinn.io',
-  //Echo
-  echoServer: 'https://swinn.io',
-  echoServerPort: '6001',
+  root: config.api.root,
+  //Echo (kept for backward compat; echoStore now uses config.reverb directly)
+  echoServer: config.reverb.host,
+  echoServerPort: String(config.reverb.port),
   //Secret
   secret: 'secret',
 

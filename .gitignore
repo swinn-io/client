@@ -1,6 +1,6 @@
 .idea
 node_modules/**/*
-.expo/*
+.expo/
 npm-debug.*
 *.jks
 *.p8
@@ -12,3 +12,15 @@ web-build/
 
 # macOS
 .DS_Store
+
+# Local env overrides
+.env*.local
+# Never commit a root .env (secrets live in .env.local); mode files stay tracked
+/.env
+
+# Generated native projects (regenerate with `expo prebuild`)
+/ios
+/android
+
+# Local editor/agent settings
+/.claude

@@ -1,15 +1,6 @@
-import React, { useEffect, useState, useContext } from 'react';
-import {
-  Container,
-  Header,
-  Left,
-  Body,
-  Right,
-  Button,
-  Title,
-  Icon,
-} from 'native-base';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import React, { useState, useContext } from 'react';
+import { Box, HStack, Heading, Button } from '@gluestack-ui/themed';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { EchoContext } from '../../services/store/echoStore';
 
 //Imported for testing
@@ -22,65 +13,42 @@ const CustomHeader = (route) => {
   const [echoState] = useContext(EchoContext);
 
   return (
-    <Header noShadow>
-      <Left style={styles.headerLeft}>
+    <HStack
+      alignItems='center'
+      justifyContent='space-between'
+      px='$3'
+      py='$2'
+      bg='$backgroundLight0'
+    >
+      <Box flexBasis='10%'>
         {isSub ? (
-          <Button transparent onPress={() => route.props.navigation.goBack()}>
-            <Icon name='ios-arrow-back' />
+          <Button variant='link' onPress={() => route.props.navigation.goBack()}>
+            <Ionicons name='chevron-back' size={24} />
           </Button>
-        ) : // <Button transparent
-        //   onPress={() => {
-        //     try {
-        //       route.props.navigation.openDrawer()
-        //     } catch (error) {
-        //       console.log("Custom Header Error" , error.message)
-        //     }
-        //   }}
-        // >
-        //   <Icon name="menu" />
-        // </Button>
-        null}
-      </Left>
-      <Body style={styles.headerBody}>
-        <Title>{headerTitle}</Title>
-      </Body>
-      <Right style={styles.headerRight}>
+        ) : null}
+      </Box>
+      <Box flexBasis='80%' alignItems='center'>
+        <Heading>{headerTitle}</Heading>
+      </Box>
+      <Box flexBasis='10%' alignItems='flex-end'>
         <Button
-          transparent
+          variant='link'
           onPress={() => {
             Updates.reloadAsync();
           }}
         >
-          {/* <FontAwesome5 name={echoState.connector.socket.connected ? 'satellite-dish' : 'plug'} style={{ */}
           <FontAwesome5
             name={'circle'}
             solid
             style={{
               fontSize: 20,
-              color: echoState.connector.socket.connected ? 'green' : 'red',
+              color: echoState.connectionStatus() === 'connected' ? 'green' : 'red',
             }}
           />
         </Button>
-      </Right>
-    </Header>
+      </Box>
+    </HStack>
   );
-};
-
-const styles = {
-  headerContainer: {
-    // flex: 1,
-    // justifyContent: 'center',
-    // alignItems:'center'
-  },
-  headerLeft: {
-    flex: '10%',
-  },
-  headerRight: {
-    flex: '10%',
-  },
-  headerBody: {
-    flex: '80%',
-  },
 };
 
 export { CustomHeader };

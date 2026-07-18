@@ -1,5 +1,6 @@
-import React, { useEffect, useContext } from 'react';
-import { Button, Icon, Text } from 'native-base';
+import React, { useContext } from 'react';
+import { Button, ButtonText } from '@gluestack-ui/themed';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Location from 'expo-location';
 
 import constants from '../../constants/constants';
@@ -50,8 +51,8 @@ const LocationComponent = (props) => {
       style={{ backgroundColor: '#4B58A6' }}
       onPress={() => sendLocation(props, dispatch)}
     >
-      <Icon style={{ color: '#fff' }} name='compass' />
-      <Text style={{ color: '#fff' }}>Location</Text>
+      <MaterialCommunityIcons name='compass' color='#fff' size={20} />
+      <ButtonText color='#fff'> Location</ButtonText>
     </Button>
   );
 };

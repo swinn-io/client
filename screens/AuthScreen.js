@@ -1,12 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { Component, useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import * as WebBrowser from 'expo-web-browser';
 import { makeRedirectUri, useAuthRequest } from 'expo-auth-session';
-import { Container, Header, Content, Button, Text } from 'native-base';
+import { Box, Button, ButtonText } from '@gluestack-ui/themed';
 import constants from '../constants/constants';
+import config from '../config/env';
 
 import { AuthContext } from '../services/store/authStore';
-import { SignIn } from '../services/userService';
+import { SignIn, GetProfile } from '../services/userService';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -19,8 +20,13 @@ const discovery = {
 export default function AuthScreen() {
   const [request, response, promptAsync] = useAuthRequest(
     {
+      clientId: config.auth.clientId,
       scopes: ['*'],
-      redirectUri: makeRedirectUri(),
+      // Use the app's own scheme with a path so the token redirect is an
+      // absolute deep link (e.g. swinn://oauthredirect) the OS hands back to
+      // the app — a bare `exp://` was being resolved as a relative URL on the
+      // API host, producing https://swinn.me/exp: (404).
+      redirectUri: makeRedirectUri({ scheme: 'swinn', path: 'oauthredirect' }),
     },
     discovery
   );
@@ -46,13 +52,19 @@ export default function AuthScreen() {
 
   const handleSignup = async () => {
     try {
-      promptAsync().then((res) => {
+      promptAsync().then(async (res) => {
         try {
           let user = res.params;
           if (user.access_token) {
             console.log('Logged in.');
-            SignIn(user);
-            setUser(user);
+            // Persist the token first so GetProfile can authenticate,
+            // then fetch the profile and store the full { token, user } shape
+            // the app expects (userState.user.id).
+            await SignIn(user);
+            const profile = await GetProfile();
+            const fullUser = { ...user, user: profile };
+            await SignIn(fullUser);
+            setUser(fullUser);
           }
         } catch (e) {
           console.error(e);
@@ -64,13 +76,11 @@ export default function AuthScreen() {
   };
 
   return (
-    <Container>
-      <Content contentContainerStyle={{ justifyContent: 'center', flex: 1 }}>
-        <Button style={{ alignSelf: 'center' }} onPress={handleSignup}>
-          <Text>Login</Text>
-        </Button>
-      </Content>
+    <Box flex={1} justifyContent='center'>
+      <Button alignSelf='center' onPress={handleSignup}>
+        <ButtonText>Login</ButtonText>
+      </Button>
       <StatusBar style='auto' />
-    </Container>
+    </Box>
   );
 }

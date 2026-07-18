@@ -1,23 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
-  Container,
+  Box,
+  ScrollView,
+  HStack,
+  VStack,
+  Avatar,
+  AvatarImage,
   Text,
-  Content,
-  Form,
-  Item,
-  Input,
-  Left,
-  Right,
   Button,
-  Icon,
-  List,
-  ListItem,
-  Thumbnail,
-  Body,
-  Footer,
-  FooterTab,
-  Fab,
-} from 'native-base';
+  ButtonText,
+} from '@gluestack-ui/themed';
+import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 
 import constants from '../constants/constants';
@@ -42,20 +35,7 @@ const MessageScreen = (props) => {
   }, [messageState]);
 
   useEffect(() => {
-    //   const parent = props.navigation.dangerouslyGetParent();
-
-    //   //Hide Tab Bar
-    //   parent.setOptions({
-    //       tabBarVisible: false
-    //   });
-
     retrieveMessage();
-
-    //Unhide Tab Bar
-    // return () =>
-    //   parent.setOptions({
-    //     tabBarVisible: true,
-    //   });
   }, []);
 
   const retrieveMessage = async () => {
@@ -116,57 +96,51 @@ const MessageScreen = (props) => {
 
   const renderRow = (message) => {
     //TO-DO parse messages
-
     return (
-      <ListItem
-        thumbnail
-        // onPress={() => {
-
-        // }}
-      >
-        <Left>
-          <Thumbnail
+      <HStack alignItems='center' space='md' p='$2'>
+        <Avatar>
+          <AvatarImage
             source={{
               uri: 'https://www.pngitem.com/pimgs/m/581-5813504_avatar-dummy-png-transparent-png.png',
             }}
           />
-        </Left>
-        <Body>
+        </Avatar>
+        <VStack flex={1}>
           <Text>{JSON.stringify(message.body)}</Text>
-          {/* <Text note>{message.attributes.body[1]}</Text> */}
-        </Body>
-      </ListItem>
+        </VStack>
+      </HStack>
     );
   };
 
   return (
-    <Container>
+    <Box flex={1}>
       <CustomHeader isSub={true} threadTitle={threadTitle} props={props} />
-      {active && active ? (
-        <>
-          <List
-            dataArray={messageState.messages[threadId]}
-            keyExtractor={(message) => message.id}
-            renderRow={(message) => renderRow(message)}
-          ></List>
-          <Footer>
-            <FooterTab>
-              <Button
-                style={{ backgroundColor: '#F2786D' }}
-                onPress={handleNewMessage}
-              >
-                <Icon style={{ color: '#fff' }} name='cellular' />
-                <Text style={{ color: '#fff' }}>Random Numbers</Text>
-              </Button>
-              <LocationComponent threadId={threadId} />
-              <BatteryComponent threadId={threadId} />
-            </FooterTab>
-          </Footer>
-        </>
+      {active ? (
+        <Box flex={1}>
+          <ScrollView flex={1}>
+            {(messageState.messages[threadId] || []).map((message) => (
+              <React.Fragment key={message.id}>
+                {renderRow(message)}
+              </React.Fragment>
+            ))}
+          </ScrollView>
+          <HStack>
+            <Button
+              flex={1}
+              style={{ backgroundColor: '#F2786D' }}
+              onPress={handleNewMessage}
+            >
+              <Ionicons name='cellular' color='#fff' size={18} />
+              <ButtonText color='#fff'> Random Numbers</ButtonText>
+            </Button>
+            <LocationComponent threadId={threadId} />
+            <BatteryComponent threadId={threadId} />
+          </HStack>
+        </Box>
       ) : (
         <LoadingScreen></LoadingScreen>
       )}
-    </Container>
+    </Box>
   );
 };
 

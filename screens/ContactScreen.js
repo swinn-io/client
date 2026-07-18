@@ -1,20 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import {
-  Container,
-  Content,
-  Button,
-  Text,
-  List,
-  ListItem,
-  Left,
-  Right,
-  Icon,
-  Thumbnail,
-  Body,
-  Spinner,
-  Fab,
-  View,
-} from 'native-base';
+import { Box, ScrollView, Text } from '@gluestack-ui/themed';
 import { CustomHeader } from '../components/common';
 
 import constants from '../constants/constants';
@@ -59,30 +44,19 @@ export default function ContactScreen({ navigation }) {
   };
 
   return (
-    <Container>
+    <Box flex={1}>
       <CustomHeader threadTitle={'My Contacts'} navigation={navigation} />
-      <Content>
+      <ScrollView>
         {contacts.map((contact) => {
           let username = contact.attributes.name;
           let userId = contact.attributes.source.id;
           return (
-            <ListItem key={userId} label={username} value={userId}>
-              <Body>
-                <Text>{username}</Text>
-              </Body>
-            </ListItem>
+            <Box key={userId} p='$3'>
+              <Text>{username}</Text>
+            </Box>
           );
         })}
-      </Content>
-      {/* <Fab
-                direction="up"
-                containerStyle={{}}
-                style={{backgroundColor: '#5067FF'}}
-                position="bottomRight"
-                onPress={() => openQRReader()}
-            >
-                <Icon name="add"/>
-            </Fab> */}
-    </Container>
+      </ScrollView>
+    </Box>
   );
 }
