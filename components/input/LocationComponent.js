@@ -7,6 +7,7 @@ import constants from '../../constants/constants';
 import fetchJson from '../../services/fetchJson';
 
 import { MessageContext } from '../../services/store/messageStore';
+import { buildLocation } from '../../services/messageTypes';
 
 let sendLocation = async (props, dispatch) => {
   const hasLocationServicesEnabled = await Location.hasServicesEnabledAsync();
@@ -26,7 +27,9 @@ let sendLocation = async (props, dispatch) => {
     }
 
     let location = await Location.getCurrentPositionAsync({});
-    const newMessage = { body: [location] };
+    const newMessage = {
+      body: buildLocation(location.coords.latitude, location.coords.longitude),
+    };
 
     const data = await fetchJson.POST(
       newMessage,

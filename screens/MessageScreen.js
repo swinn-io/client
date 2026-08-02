@@ -7,10 +7,7 @@ import {
   Avatar,
   AvatarImage,
   Text,
-  Button,
-  ButtonText,
 } from '@gluestack-ui/themed';
-import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 
 import constants from '../constants/constants';
@@ -69,31 +66,6 @@ const MessageScreen = (props) => {
     }
   };
 
-  const handleNewMessage = async () => {
-    try {
-      //generate random number between -100 and 100 for test purposes
-      var ranNum1 =
-        Math.ceil(Math.random() * 100) * (Math.round(Math.random()) ? 1 : -1);
-      var ranNum2 =
-        Math.ceil(Math.random() * 100) * (Math.round(Math.random()) ? 1 : -1);
-
-      const newMessage = { body: [ranNum1, ranNum2] };
-
-      const data = await fetchJson.POST(
-        newMessage,
-        constants.createNewMessage(threadId)
-      );
-
-      try {
-        await dispatch({ type: 'ADD_MESSAGES', data: data.data });
-      } catch (err) {
-        console.log('ERROR => ', err);
-      }
-    } catch (error) {
-      console.log('Message Retrieve Error:', error);
-    }
-  };
-
   const renderRow = (message) => {
     //TO-DO parse messages
     return (
@@ -125,14 +97,6 @@ const MessageScreen = (props) => {
             ))}
           </ScrollView>
           <HStack>
-            <Button
-              flex={1}
-              style={{ backgroundColor: '#F2786D' }}
-              onPress={handleNewMessage}
-            >
-              <Ionicons name='cellular' color='#fff' size={18} />
-              <ButtonText color='#fff'> Random Numbers</ButtonText>
-            </Button>
             <LocationComponent threadId={threadId} />
             <BatteryComponent threadId={threadId} />
           </HStack>

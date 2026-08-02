@@ -6,6 +6,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MessageContext } from '../../services/store/messageStore';
 import fetchJson from '../../services/fetchJson';
 import constants from '../../constants/constants';
+import { buildBatteryMetric } from '../../services/messageTypes';
 
 let batteryColor = (level) => {
   let round = batteryPercentage(level);
@@ -29,7 +30,7 @@ const BatteryComponent = (props) => {
 
   let sendBattery = async (props, dispatch) => {
     try {
-      const newMessage = { body: { battery: battery } };
+      const newMessage = { body: buildBatteryMetric(battery) };
       const data = await fetchJson.POST(
         newMessage,
         constants.createNewMessage(props.threadId)
