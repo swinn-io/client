@@ -44,7 +44,7 @@
     "socket.io-client": "^2.3.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9",
+    "@babel/core": "^7.29.6",
     "babel-preset-expo": "8.5.1",
     "expo-battery": "~6.0.3"
   },
